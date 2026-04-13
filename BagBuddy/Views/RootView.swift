@@ -30,6 +30,6 @@ struct RootView: View {
             }
         }
         .animation(.easeInOut(duration: 0.25), value: vm.phase)
-        .preferredColorScheme(.dark)
+        .preferredColorScheme(.light)
     }
 }

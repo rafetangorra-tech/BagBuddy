@@ -12,8 +12,7 @@ struct RestView: View {
             VStack(spacing: 0) {
                 Spacer()
 
-                // REST label
-                VStack(spacing: 8) {
+                VStack(spacing: 12) {
                     Text("REST")
                         .font(.bbDisplay)
                         .foregroundColor(.bbAccent)
@@ -24,9 +23,8 @@ struct RestView: View {
 
                 Spacer()
 
-                // Next round info
                 if afterRound < vm.config.numberOfRounds {
-                    VStack(spacing: 6) {
+                    VStack(spacing: 8) {
                         Text("NEXT")
                             .font(.bbLabel)
                             .foregroundColor(.bbTextSecondary)
@@ -41,7 +39,6 @@ struct RestView: View {
                     .padding(.bottom, 60)
                 }
 
-                // Stop button
                 Button {
                     vm.stopSession()
                 } label: {
@@ -54,6 +51,10 @@ struct RestView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 6, style: .continuous)
                                 .fill(Color.bbSurface)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                        .stroke(Color.bbBorder, lineWidth: 1)
+                                )
                         )
                 }
                 .buttonStyle(.plain)

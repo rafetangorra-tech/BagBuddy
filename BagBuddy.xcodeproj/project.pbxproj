@@ -1,0 +1,538 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BB000001000000000000001A /* BagBuddyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000001A /* BagBuddyApp.swift */; };
+		BB000001000000000000002A /* Combo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000002A /* Combo.swift */; };
+		BB000001000000000000003A /* RoundConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000003A /* RoundConfiguration.swift */; };
+		BB000001000000000000004A /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000004A /* SessionState.swift */; };
+		BB000001000000000000005A /* DifficultyLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000005A /* DifficultyLevel.swift */; };
+		BB000001000000000000006A /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000006A /* Move.swift */; };
+		BB000001000000000000007A /* ComboLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000007A /* ComboLibrary.swift */; };
+		BB000001000000000000008A /* ComboGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000008A /* ComboGenerator.swift */; };
+		BB000001000000000000009A /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000009A /* AudioEngine.swift */; };
+		BB00000100000000000000AA /* RoundTimerEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000000AA /* RoundTimerEngine.swift */; };
+		BB00000100000000000000BA /* TimingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000000BA /* TimingEngine.swift */; };
+		BB00000100000000000000CA /* SessionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000000CA /* SessionViewModel.swift */; };
+		BB00000100000000000000DA /* Color+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000000DA /* Color+Theme.swift */; };
+		BB00000100000000000000EA /* Font+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000000EA /* Font+Theme.swift */; };
+		BB00000100000000000000FA /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000000FA /* RootView.swift */; };
+		BB000001000000000000010A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000010A /* HomeView.swift */; };
+		BB000001000000000000011A /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000011A /* SessionView.swift */; };
+		BB000001000000000000012A /* RestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000012A /* RestView.swift */; };
+		BB000001000000000000013A /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000013A /* CountdownView.swift */; };
+		BB000001000000000000014A /* CompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000014A /* CompleteView.swift */; };
+		BB000001000000000000015A /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000015A /* SettingsView.swift */; };
+		BB000001000000000000016A /* ComboDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000016A /* ComboDisplayView.swift */; };
+		BB000001000000000000017A /* BeatIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000017A /* BeatIndicatorView.swift */; };
+		BB000001000000000000018A /* DifficultyPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000018A /* DifficultyPickerView.swift */; };
+		BB000001000000000000019A /* RoundBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB000002000000000000019A /* RoundBadgeView.swift */; };
+		BB00000100000000000001AA /* RoundTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000001AA /* RoundTimerView.swift */; };
+		BB00000100000000000001BA /* combos.json in Resources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000001BA /* combos.json */; };
+		BB00000100000000000001CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000001CA /* Assets.xcassets */; };
+		BB00000100000000000001DA /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000001DA /* Audio */; };
+		BB00000100000000000001EA /* Oswald-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000001EA /* Oswald-Medium.ttf */; };
+		BB00000100000000000001FA /* Oswald-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB00000200000000000001FA /* Oswald-SemiBold.ttf */; };
+		BB000001000000000000020A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB000002000000000000020A /* AVFoundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		BB000002000000000000001A /* BagBuddyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BagBuddyApp.swift; sourceTree = "<group>"; };
+		BB000002000000000000002A /* Combo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Combo.swift; sourceTree = "<group>"; };
+		BB000002000000000000003A /* RoundConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundConfiguration.swift; sourceTree = "<group>"; };
+		BB000002000000000000004A /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
+		BB000002000000000000005A /* DifficultyLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyLevel.swift; sourceTree = "<group>"; };
+		BB000002000000000000006A /* Move.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
+		BB000002000000000000007A /* ComboLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComboLibrary.swift; sourceTree = "<group>"; };
+		BB000002000000000000008A /* ComboGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComboGenerator.swift; sourceTree = "<group>"; };
+		BB000002000000000000009A /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
+		BB00000200000000000000AA /* RoundTimerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundTimerEngine.swift; sourceTree = "<group>"; };
+		BB00000200000000000000BA /* TimingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimingEngine.swift; sourceTree = "<group>"; };
+		BB00000200000000000000CA /* SessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionViewModel.swift; sourceTree = "<group>"; };
+		BB00000200000000000000DA /* Color+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Theme.swift"; sourceTree = "<group>"; };
+		BB00000200000000000000EA /* Font+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Theme.swift"; sourceTree = "<group>"; };
+		BB00000200000000000000FA /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		BB000002000000000000010A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		BB000002000000000000011A /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
+		BB000002000000000000012A /* RestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestView.swift; sourceTree = "<group>"; };
+		BB000002000000000000013A /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
+		BB000002000000000000014A /* CompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteView.swift; sourceTree = "<group>"; };
+		BB000002000000000000015A /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BB000002000000000000016A /* ComboDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComboDisplayView.swift; sourceTree = "<group>"; };
+		BB000002000000000000017A /* BeatIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatIndicatorView.swift; sourceTree = "<group>"; };
+		BB000002000000000000018A /* DifficultyPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyPickerView.swift; sourceTree = "<group>"; };
+		BB000002000000000000019A /* RoundBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundBadgeView.swift; sourceTree = "<group>"; };
+		BB00000200000000000001AA /* RoundTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundTimerView.swift; sourceTree = "<group>"; };
+		BB00000200000000000001BA /* combos.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = combos.json; sourceTree = "<group>"; };
+		BB00000200000000000001CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BB00000200000000000001DA /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
+		BB00000200000000000001EA /* Oswald-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-Medium.ttf"; sourceTree = "<group>"; };
+		BB00000200000000000001FA /* Oswald-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Oswald-SemiBold.ttf"; sourceTree = "<group>"; };
+		BB000002000000000000020A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		BB000002000000000000021A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB000002000000000000022A /* BagBuddy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BagBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BB000003000000000000001A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB000001000000000000020A /* AVFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BB000004000000000000001A /* BagBuddy root */ = {
+			isa = PBXGroup;
+			children = (
+				BB000004000000000000002A /* BagBuddy */,
+				BB000004000000000000009A /* Frameworks */,
+				BB000004000000000000003A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BB000004000000000000002A /* BagBuddy */ = {
+			isa = PBXGroup;
+			children = (
+				BB000002000000000000001A /* BagBuddyApp.swift */,
+				BB000002000000000000021A /* Info.plist */,
+				BB00000200000000000001CA /* Assets.xcassets */,
+				BB000004000000000000004A /* Models */,
+				BB000004000000000000005A /* Data */,
+				BB000004000000000000006A /* Engines */,
+				BB000004000000000000007A /* ViewModels */,
+				BB000004000000000000008A /* Views */,
+				BB00000400000000000000AA /* Extensions */,
+				BB00000400000000000000BA /* Resources */,
+				BB00000400000000000000CA /* Fonts */,
+				BB00000400000000000000DA /* Audio */,
+			);
+			path = BagBuddy;
+			sourceTree = "<group>";
+		};
+		BB000004000000000000003A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BB000002000000000000022A /* BagBuddy.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BB000004000000000000004A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BB000002000000000000002A /* Combo.swift */,
+				BB000002000000000000003A /* RoundConfiguration.swift */,
+				BB000002000000000000004A /* SessionState.swift */,
+				BB000002000000000000005A /* DifficultyLevel.swift */,
+				BB000002000000000000006A /* Move.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BB000004000000000000005A /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				BB000002000000000000007A /* ComboLibrary.swift */,
+				BB000002000000000000008A /* ComboGenerator.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		BB000004000000000000006A /* Engines */ = {
+			isa = PBXGroup;
+			children = (
+				BB000002000000000000009A /* AudioEngine.swift */,
+				BB00000200000000000000AA /* RoundTimerEngine.swift */,
+				BB00000200000000000000BA /* TimingEngine.swift */,
+			);
+			path = Engines;
+			sourceTree = "<group>";
+		};
+		BB000004000000000000007A /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				BB00000200000000000000CA /* SessionViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		BB000004000000000000008A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BB00000200000000000000FA /* RootView.swift */,
+				BB000002000000000000010A /* HomeView.swift */,
+				BB000002000000000000011A /* SessionView.swift */,
+				BB000002000000000000012A /* RestView.swift */,
+				BB000002000000000000013A /* CountdownView.swift */,
+				BB000002000000000000014A /* CompleteView.swift */,
+				BB000002000000000000015A /* SettingsView.swift */,
+				BB000004000000000000009B /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BB000004000000000000009B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				BB000002000000000000016A /* ComboDisplayView.swift */,
+				BB000002000000000000017A /* BeatIndicatorView.swift */,
+				BB000002000000000000018A /* DifficultyPickerView.swift */,
+				BB000002000000000000019A /* RoundBadgeView.swift */,
+				BB00000200000000000001AA /* RoundTimerView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		BB000004000000000000009A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BB000002000000000000020A /* AVFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BB00000400000000000000AA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				BB00000200000000000000DA /* Color+Theme.swift */,
+				BB00000200000000000000EA /* Font+Theme.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		BB00000400000000000000BA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BB00000200000000000001BA /* combos.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		BB00000400000000000000CA /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				BB00000200000000000001EA /* Oswald-Medium.ttf */,
+				BB00000200000000000001FA /* Oswald-SemiBold.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		BB00000400000000000000DA /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				BB00000200000000000001DA /* Audio */,
+			);
+			name = Audio;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BB000005000000000000001A /* BagBuddy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BB000008000000000000001A /* Build configuration list for PBXNativeTarget "BagBuddy" */;
+			buildPhases = (
+				BB000006000000000000001A /* Sources */,
+				BB000003000000000000001A /* Frameworks */,
+				BB000007000000000000001A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BagBuddy;
+			productName = BagBuddy;
+			productReference = BB000002000000000000022A /* BagBuddy.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BB000009000000000000001A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					BB000005000000000000001A = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = BB00000A000000000000001A /* Build configuration list for PBXProject "BagBuddy" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BB000004000000000000001A;
+			productRefGroup = BB000004000000000000003A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BB000005000000000000001A /* BagBuddy */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BB000007000000000000001A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB00000100000000000001BA /* combos.json in Resources */,
+				BB00000100000000000001CA /* Assets.xcassets in Resources */,
+				BB00000100000000000001DA /* Audio in Resources */,
+				BB00000100000000000001EA /* Oswald-Medium.ttf in Resources */,
+				BB00000100000000000001FA /* Oswald-SemiBold.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BB000006000000000000001A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB000001000000000000001A /* BagBuddyApp.swift in Sources */,
+				BB000001000000000000002A /* Combo.swift in Sources */,
+				BB000001000000000000003A /* RoundConfiguration.swift in Sources */,
+				BB000001000000000000004A /* SessionState.swift in Sources */,
+				BB000001000000000000005A /* DifficultyLevel.swift in Sources */,
+				BB000001000000000000006A /* Move.swift in Sources */,
+				BB000001000000000000007A /* ComboLibrary.swift in Sources */,
+				BB000001000000000000008A /* ComboGenerator.swift in Sources */,
+				BB000001000000000000009A /* AudioEngine.swift in Sources */,
+				BB00000100000000000000AA /* RoundTimerEngine.swift in Sources */,
+				BB00000100000000000000BA /* TimingEngine.swift in Sources */,
+				BB00000100000000000000CA /* SessionViewModel.swift in Sources */,
+				BB00000100000000000000DA /* Color+Theme.swift in Sources */,
+				BB00000100000000000000EA /* Font+Theme.swift in Sources */,
+				BB00000100000000000000FA /* RootView.swift in Sources */,
+				BB000001000000000000010A /* HomeView.swift in Sources */,
+				BB000001000000000000011A /* SessionView.swift in Sources */,
+				BB000001000000000000012A /* RestView.swift in Sources */,
+				BB000001000000000000013A /* CountdownView.swift in Sources */,
+				BB000001000000000000014A /* CompleteView.swift in Sources */,
+				BB000001000000000000015A /* SettingsView.swift in Sources */,
+				BB000001000000000000016A /* ComboDisplayView.swift in Sources */,
+				BB000001000000000000017A /* BeatIndicatorView.swift in Sources */,
+				BB000001000000000000018A /* DifficultyPickerView.swift in Sources */,
+				BB000001000000000000019A /* RoundBadgeView.swift in Sources */,
+				BB00000100000000000001AA /* RoundTimerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		BB00000B000000000000001A /* Debug - Project */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLES = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BB00000B000000000000002A /* Release - Project */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLES = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BB00000C000000000000001A /* Debug - Target */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BagBuddy/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bagbuddy.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		BB00000C000000000000002A /* Release - Target */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = BagBuddy/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bagbuddy.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BB00000A000000000000001A /* Build configuration list for PBXProject "BagBuddy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BB00000B000000000000001A /* Debug */,
+				BB00000B000000000000002A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BB000008000000000000001A /* Build configuration list for PBXNativeTarget "BagBuddy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BB00000C000000000000001A /* Debug */,
+				BB00000C000000000000002A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = BB000009000000000000001A /* Project object */;
+}

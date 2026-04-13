@@ -30,3 +30,8 @@ fastlane/test_output
 
 # CocoaPods (not used, just in case)
 Pods/
+
+# Non-app files in repo root
+*.mp4
+*.prproj
+Adobe Premiere Pro Auto-Save/

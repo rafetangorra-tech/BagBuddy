@@ -1,44 +1,37 @@
 import SwiftUI
 
 extension Font {
-    /// Large countdown numbers, "FIGHT", "REST"
-    static let bbDisplay: Font = {
-        Font.system(size: 80, weight: .black)
-            .width(.condensed)
-    }()
+    // MARK: - Oswald (brand / combo display)
 
-    /// Round number, section headers — all caps
-    static let bbHeadline: Font = {
-        Font.system(size: 22, weight: .black)
-            .width(.condensed)
-    }()
+    /// Giant combo code or brand display — Oswald SemiBold 72
+    static let bbDisplay: Font = .custom("Oswald-SemiBold", size: 72)
 
-    /// Combo move chips (strikes)
-    static let bbComboStrike: Font = {
-        Font.system(size: 40, weight: .black)
-            .width(.condensed)
-    }()
+    /// Large combo combination text — Oswald SemiBold 40
+    static let bbCombo: Font = .custom("Oswald-SemiBold", size: 40)
 
-    /// Combo move chips (defense labels)
-    static let bbComboDefense: Font = {
-        Font.system(size: 22, weight: .bold)
-            .width(.condensed)
-    }()
+    /// Drill combo text (slightly larger) — Oswald SemiBold 44
+    static let bbComboDrill: Font = .custom("Oswald-SemiBold", size: 44)
+
+    /// Section headings, mode names — Oswald Medium 22
+    static let bbHeadline: Font = .custom("Oswald-Medium", size: 22)
+
+    /// Combo code badge ("BN-04") — Oswald Medium 14
+    static let bbCode: Font = .custom("Oswald-Medium", size: 14)
+
+    // MARK: - SF Pro (UI / labels)
 
     /// Round timer digits
-    static let bbTimer: Font = {
-        Font.system(size: 52, weight: .heavy, design: .monospaced)
-    }()
+    static let bbTimer: Font = .system(size: 52, weight: .heavy, design: .monospaced)
 
-    /// Small all-caps labels
-    static let bbLabel: Font = {
-        Font.system(size: 12, weight: .semibold)
-            .width(.condensed)
-    }()
+    /// Drill countdown timer
+    static let bbDrillTimer: Font = .system(size: 72, weight: .black, design: .monospaced)
 
-    /// Settings body
-    static let bbBody: Font = {
-        Font.system(size: 17, weight: .medium)
-            .width(.condensed)
-    }()
+    /// Small all-caps labels (section headers, tags)
+    static let bbLabel: Font = .system(size: 12, weight: .semibold)
+
+    /// Settings body text
+    static let bbBody: Font = .system(size: 17, weight: .regular)
+
+    /// Mode description subtitle
+    static let bbCaption: Font = .system(size: 13, weight: .regular)
 }

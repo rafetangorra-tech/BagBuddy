@@ -8,14 +8,24 @@ final class SessionViewModel: ObservableObject {
 
     @Published var phase: SessionPhase = .idle
     @Published var currentCombo: Combo? = nil
-    @Published var currentMoveIndex: Int? = nil
-    @Published var isExecutionWindow: Bool = false
+    @Published var drillSecondsRemaining: Int = 0
     @Published var combosDelivered: Int = 0
+    @Published var isPaused: Bool = false
 
-    // MARK: - Settings (persisted via UserDefaults)
+    // MARK: - Configuration (persisted)
 
-    @Published var config: RoundConfiguration = .default {
-        didSet { saveConfig() }
+    @Published var config: WorkoutConfiguration = .default {
+        didSet {
+            saveConfig()
+            // Sync BG music immediately if toggled while a session is live
+            if oldValue.backgroundMusicEnabled != config.backgroundMusicEnabled {
+                if config.backgroundMusicEnabled {
+                    AudioEngine.shared.startBackgroundMusic()
+                } else {
+                    AudioEngine.shared.stopBackgroundMusic()
+                }
+            }
+        }
     }
 
     // MARK: - Private
@@ -23,113 +33,150 @@ final class SessionViewModel: ObservableObject {
     private let roundTimer = RoundTimerEngine()
     private var cancellables = Set<AnyCancellable>()
 
-    private var libraryQueue: [Combo] = []
-    private var usedSignatures: [String] = []
-    private var useLibraryNext = true
+    // Combo pool for the current session (shuffled, refilled when exhausted)
+    private var comboQueue: [Combo] = []
+    private var recentCodes: [String] = []
 
     // MARK: - Init
 
     init() {
         loadConfig()
 
-        // Forward round timer phase to our phase
         roundTimer.$phase
             .receive(on: RunLoop.main)
-            .sink { [weak self] newPhase in
-                self?.phase = newPhase
+            .assign(to: &$phase)
+
+        roundTimer.$currentCombo
+            .receive(on: RunLoop.main)
+            .assign(to: &$currentCombo)
+
+        roundTimer.$drillSecondsRemaining
+            .receive(on: RunLoop.main)
+            .assign(to: &$drillSecondsRemaining)
+
+        roundTimer.onNeedNextCombo = { [weak self] in
+            self?.nextCombo()
+        }
+
+        // Deactivate the audio session when a round completes naturally so the
+        // user's music restores to full volume immediately.
+        roundTimer.$phase
+            .filter { if case .complete = $0 { return true }; return false }
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.isPaused = false
+                AudioEngine.shared.deactivateSession()
             }
             .store(in: &cancellables)
-
-        // Wire callbacks
-        roundTimer.onNeedNextCombo = { [weak self] in
-            self?.nextCombo() ?? Combo(moves: [.jab], libraryDifficulty: .beginner)
-        }
-        roundTimer.onMoveIndex = { [weak self] idx in
-            self?.currentMoveIndex = idx
-            self?.isExecutionWindow = false
-        }
-        roundTimer.onExecutionWindow = { [weak self] in
-            self?.currentMoveIndex = nil
-            self?.isExecutionWindow = true
-        }
     }
 
     // MARK: - Session Control
 
     func startSession() {
-        resetQueues()
+        AudioEngine.shared.beginSession()
+        rebuildPool()
         combosDelivered = 0
+        isPaused = false
         roundTimer.start(config: config)
+
+        if config.backgroundMusicEnabled {
+            AudioEngine.shared.startBackgroundMusic()
+        }
     }
 
     func stopSession() {
         roundTimer.stop()
-        currentCombo = nil
-        currentMoveIndex = nil
-        isExecutionWindow = false
+        isPaused = false
+        AudioEngine.shared.deactivateSession()
+    }
+
+    func pauseSession() {
+        isPaused = true
+        roundTimer.pause()
+    }
+
+    func resumeSession() {
+        isPaused = false
+        roundTimer.resume()
+    }
+
+    func skipCombo() {
+        AudioEngine.shared.skipCombo()
     }
 
     // MARK: - Combo Selection
 
-    func nextCombo() -> Combo {
+    private func nextCombo() -> Combo? {
+        if comboQueue.isEmpty { rebuildPool() }
+        guard !comboQueue.isEmpty else { return nil }
+
+        // Avoid repeating a combo seen in the last 8
+        var candidate = comboQueue.removeFirst()
+        if recentCodes.suffix(8).contains(candidate.code) && comboQueue.count > 2 {
+            comboQueue.append(candidate)
+            candidate = comboQueue.removeFirst()
+        }
+
+        recentCodes.append(candidate.code)
+        if recentCodes.count > 20 { recentCodes.removeFirst() }
         combosDelivered += 1
-        let candidate: Combo
-
-        if useLibraryNext, !libraryQueue.isEmpty {
-            candidate = libraryQueue.removeFirst()
-        } else {
-            candidate = ComboGenerator.generate(for: config.difficulty)
-        }
-        useLibraryNext.toggle()
-
-        // Dedup: regenerate if this signature appeared in last 10
-        let sig = candidate.displayText
-        if usedSignatures.suffix(10).contains(sig) {
-            let fresh = ComboGenerator.generate(for: config.difficulty)
-            usedSignatures.append(fresh.displayText)
-            currentCombo = fresh
-            return fresh
-        }
-
-        usedSignatures.append(sig)
-        if usedSignatures.count > 20 { usedSignatures.removeFirst() }
-        currentCombo = candidate
         return candidate
     }
 
-    // MARK: - Private Helpers
-
-    private func resetQueues() {
-        usedSignatures = []
-        useLibraryNext = true
-        libraryQueue = ComboLibrary.combos(for: config.difficulty).shuffled()
+    private func rebuildPool() {
+        let pool: [Combo]
+        if config.mode == .drill {
+            pool = ComboService.shared.drillPool(discipline: config.discipline)
+        } else {
+            pool = ComboService.shared.callOutPool(discipline: config.discipline, mode: config.mode)
+        }
+        comboQueue = pool.shuffled()
     }
 
     // MARK: - Persistence
 
     private func saveConfig() {
-        UserDefaults.standard.set(config.roundDurationSeconds, forKey: "roundDuration")
-        UserDefaults.standard.set(config.restDurationSeconds,  forKey: "restDuration")
-        UserDefaults.standard.set(config.numberOfRounds,       forKey: "numberOfRounds")
-        UserDefaults.standard.set(config.difficulty.rawValue,  forKey: "difficulty")
-        UserDefaults.standard.set(config.bpm,                  forKey: "bpm")
+        let d = UserDefaults.standard
+        d.set(config.discipline.rawValue,           forKey: "discipline")
+        d.set(config.mode.rawValue,                 forKey: "workoutMode")
+        d.set(config.pacing.rawValue,               forKey: "pacing")
+        d.set(config.roundDurationSeconds,           forKey: "roundDuration")
+        d.set(config.restDurationSeconds,            forKey: "restDuration")
+        d.set(config.numberOfRounds,                 forKey: "numberOfRounds")
+        d.set(config.drillDurationSeconds,           forKey: "drillDuration")
+        d.set(config.warningTimeSeconds,             forKey: "warningTime")
+        d.set(config.backgroundMusicEnabled,         forKey: "bgMusic")
+        d.set(config.hapticsEnabled,                 forKey: "haptics")
     }
 
     private func loadConfig() {
-        let roundDuration  = UserDefaults.standard.integer(forKey: "roundDuration")
-        let restDuration   = UserDefaults.standard.integer(forKey: "restDuration")
-        let numberOfRounds = UserDefaults.standard.integer(forKey: "numberOfRounds")
-        let difficultyRaw  = UserDefaults.standard.string(forKey: "difficulty")
-        let bpm            = UserDefaults.standard.double(forKey: "bpm")
+        let d = UserDefaults.standard
+        var c = WorkoutConfiguration()
 
-        let difficulty = DifficultyLevel(rawValue: difficultyRaw ?? "") ?? .beginner
+        if let raw = d.string(forKey: "discipline"),
+           let v = Discipline(rawValue: raw) { c.discipline = v }
+        if let raw = d.string(forKey: "workoutMode"),
+           let v = WorkoutMode(rawValue: raw) { c.mode = v }
+        if let raw = d.string(forKey: "pacing"),
+           let v = PacingPreset(rawValue: raw) { c.pacing = v }
 
-        config = RoundConfiguration(
-            roundDurationSeconds: roundDuration > 0 ? roundDuration : 180,
-            restDurationSeconds:  restDuration  > 0 ? restDuration  : 60,
-            numberOfRounds:       numberOfRounds > 0 ? numberOfRounds : 3,
-            difficulty:           difficulty,
-            bpm:                  bpm > 0 ? bpm : difficulty.defaultBPM
-        )
+        let roundDuration  = d.integer(forKey: "roundDuration")
+        let restDuration   = d.integer(forKey: "restDuration")
+        let numberOfRounds = d.integer(forKey: "numberOfRounds")
+        let drillDuration  = d.integer(forKey: "drillDuration")
+
+        if roundDuration  > 0 { c.roundDurationSeconds = roundDuration }
+        if restDuration   > 0 { c.restDurationSeconds  = restDuration }
+        if numberOfRounds > 0 { c.numberOfRounds       = numberOfRounds }
+        if drillDuration  > 0 { c.drillDurationSeconds = drillDuration }
+
+        let warningTime = d.integer(forKey: "warningTime")
+        // 0 is a valid value (warning off), so we only skip the -1 sentinel case
+        if d.object(forKey: "warningTime") != nil { c.warningTimeSeconds = warningTime }
+
+        c.backgroundMusicEnabled = d.bool(forKey: "bgMusic")
+        c.hapticsEnabled = d.object(forKey: "haptics") == nil ? true : d.bool(forKey: "haptics")
+
+        config = c
     }
 }

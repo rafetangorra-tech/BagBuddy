@@ -10,21 +10,24 @@ struct RoundBadgeView: View {
             Text("\(prefix) \(current)")
                 .font(.bbLabel)
                 .foregroundColor(.bbAccent)
-                .kerning(2)
-                .textCase(.uppercase)
+                .kerning(1.5)
             Text("/")
                 .font(.bbLabel)
                 .foregroundColor(.bbTextSecondary)
             Text("\(total)")
                 .font(.bbLabel)
                 .foregroundColor(.bbTextSecondary)
-                .kerning(2)
+                .kerning(1.5)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 5)
         .background(
             RoundedRectangle(cornerRadius: 4, style: .continuous)
                 .fill(Color.bbSurface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                        .stroke(Color.bbBorder, lineWidth: 1)
+                )
         )
     }
 }

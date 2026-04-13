@@ -23,22 +23,20 @@ struct CompleteView: View {
 
                 Spacer()
 
-                // Stats
-                HStack(spacing: 32) {
+                HStack(spacing: 40) {
                     statItem(value: "\(vm.config.numberOfRounds)", label: "ROUNDS")
                     statItem(value: "\(vm.combosDelivered)", label: "COMBOS")
                 }
 
                 Spacer()
 
-                // Done button
                 Button {
                     vm.stopSession()
                 } label: {
                     Text("DONE")
                         .font(.bbHeadline)
                         .kerning(3)
-                        .foregroundColor(.bbTextPrimary)
+                        .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 20)
                         .background(
@@ -54,7 +52,7 @@ struct CompleteView: View {
     }
 
     private func statItem(value: String, label: String) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 6) {
             Text(value)
                 .font(.bbDisplay)
                 .foregroundColor(.bbTextPrimary)
