@@ -62,6 +62,7 @@ final class RoundTimerEngine: ObservableObject {
             guard !Task.isCancelled else { return }
             phase = .countdown(secondsRemaining: i)
             AudioEngine.shared.playCountdownBeep()
+            await MainActor.run { HapticsEngine.shared.countdownTick() }
             try? await Task.sleep(nanoseconds: 1_000_000_000)
         }
         guard !Task.isCancelled else { return }
@@ -70,6 +71,7 @@ final class RoundTimerEngine: ObservableObject {
             guard !Task.isCancelled else { return }
 
             AudioEngine.shared.playRoundStart()
+            HapticsEngine.shared.roundStart()
 
             if config.mode == .drill {
                 await runDrillRound(number: roundNumber, config: config)
@@ -79,6 +81,7 @@ final class RoundTimerEngine: ObservableObject {
 
             guard !Task.isCancelled else { return }
             AudioEngine.shared.playRoundEnd()
+            HapticsEngine.shared.roundEnd()
 
             if roundNumber < config.numberOfRounds {
                 await runRest(afterRound: roundNumber, duration: config.restDurationSeconds)
@@ -113,7 +116,10 @@ final class RoundTimerEngine: ObservableObject {
                     let warnAt = config.warningTimeSeconds
                     if warnAt > 0 && remaining == warnAt && !warningFired.value {
                         warningFired.value = true
-                        await MainActor.run { AudioEngine.shared.playWarning() }
+                        await MainActor.run {
+                            AudioEngine.shared.playWarning()
+                            HapticsEngine.shared.warning()
+                        }
                     }
 
                     try? await self.pauseAwareSleep(seconds: 1.0)
@@ -124,8 +130,16 @@ final class RoundTimerEngine: ObservableObject {
             group.addTask { [weak self] in
                 guard let self else { return }
                 while Date() < endTime && !Task.isCancelled {
+                    // Wait while paused before starting the next combo
+                    while self.isPaused && !Task.isCancelled {
+                        try? await Task.sleep(nanoseconds: 100_000_000)
+                    }
+                    guard !Task.isCancelled && Date() < endTime else { break }
                     guard let combo = self.onNeedNextCombo?() else { break }
-                    await MainActor.run { self.currentCombo = combo }
+                    await MainActor.run {
+                        self.currentCombo = combo
+                        HapticsEngine.shared.comboDelivered()
+                    }
                     let elapsed = Date().timeIntervalSince(startTime)
                     await TimingEngine.shared.cueCombo(
                         combo,
@@ -159,7 +173,8 @@ final class RoundTimerEngine: ObservableObject {
                 await MainActor.run { self.phase = .round(number: number, secondsRemaining: remaining) }
                 if remaining == 0 { break }
 
-                if remaining == 10 && !warningFired.value {
+                let warnAt = config.warningTimeSeconds
+                if warnAt > 0 && remaining == warnAt && !warningFired.value {
                     warningFired.value = true
                     await MainActor.run { AudioEngine.shared.playWarning() }
                 }

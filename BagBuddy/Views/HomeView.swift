@@ -2,23 +2,44 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var vm: SessionViewModel
+    var onStart: () -> Void = {}
     @State private var showSettings = false
+    @State private var showInfo = false
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
+        ZStack {
             Color.bbBackground.ignoresSafeArea()
 
-            // Settings button — top-right, clear of the logo
-            Button {
-                showSettings = true
-            } label: {
-                Image(systemName: "slider.horizontal.3")
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(.bbTextSecondary)
-                    .padding(16)
+            // Top buttons
+            VStack {
+                HStack {
+                    // Info button — top-left
+                    Button {
+                        showInfo = true
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.bbTextSecondary)
+                            .padding(16)
+                    }
+                    .buttonStyle(.plain)
+
+                    Spacer()
+
+                    // Settings button — top-right
+                    Button {
+                        showSettings = true
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.bbTextSecondary)
+                            .padding(16)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.top, 52)
+                Spacer()
             }
-            .buttonStyle(.plain)
-            .padding(.top, 52)
 
             // Main layout
             VStack(spacing: 0) {
@@ -57,6 +78,11 @@ struct HomeView: View {
         }
         .sheet(isPresented: $showSettings) {
             SettingsView(vm: vm)
+        }
+        .fullScreenCover(isPresented: $showInfo) {
+            OnboardingView(includeHealthSlide: true) {
+                showInfo = false
+            }
         }
     }
 
@@ -200,7 +226,7 @@ struct HomeView: View {
 
     private var startButton: some View {
         Button {
-            vm.startSession()
+            onStart()
         } label: {
             Text("START SESSION")
                 .font(.custom("Oswald-SemiBold", size: 18))

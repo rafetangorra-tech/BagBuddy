@@ -113,6 +113,21 @@ struct SettingsView: View {
                             .tint(.bbAccent)
                         }
 
+                        // NOTIFICATIONS
+                        settingsSection(title: "NOTIFICATIONS") {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Toggle(isOn: $vm.config.notificationsEnabled) {
+                                    Text("Daily Training Reminder")
+                                        .font(.bbBody)
+                                        .foregroundColor(.bbTextPrimary)
+                                }
+                                .tint(.bbAccent)
+                                Text("Your coach will check in every day at 5 PM.")
+                                    .font(.bbCaption)
+                                    .foregroundColor(.bbTextSecondary)
+                            }
+                        }
+
                         // Reset
                         Button {
                             vm.config = .default
@@ -151,7 +166,7 @@ struct SettingsView: View {
     // MARK: - Warning Time Picker
 
     private static let warningOptions: [(label: String, value: Int)] = [
-        ("OFF", 0), ("10s", 10), ("20s", 20), ("30s", 30)
+        ("OFF", 0), ("10s", 10), ("15s", 15), ("30s", 30)
     ]
 
     private var warningTimePicker: some View {
@@ -188,7 +203,9 @@ struct SettingsView: View {
                 RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .stroke(Color.bbBorder, lineWidth: 1)
             )
-            Text("Plays a bell N seconds before round end")
+            Text(vm.config.warningTimeSeconds == 0
+                    ? "Warning bell is off."
+                    : "Plays a warning bell \(vm.config.warningTimeSeconds)s before round end.")
                 .font(.bbCaption)
                 .foregroundColor(.bbTextSecondary)
         }

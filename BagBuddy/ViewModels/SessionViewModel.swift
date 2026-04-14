@@ -17,12 +17,21 @@ final class SessionViewModel: ObservableObject {
     @Published var config: WorkoutConfiguration = .default {
         didSet {
             saveConfig()
-            // Sync BG music immediately if toggled while a session is live
             if oldValue.backgroundMusicEnabled != config.backgroundMusicEnabled {
                 if config.backgroundMusicEnabled {
                     AudioEngine.shared.startBackgroundMusic()
                 } else {
                     AudioEngine.shared.stopBackgroundMusic()
+                }
+            }
+            if oldValue.hapticsEnabled != config.hapticsEnabled {
+                HapticsEngine.shared.isEnabled = config.hapticsEnabled
+            }
+            if oldValue.notificationsEnabled != config.notificationsEnabled {
+                if config.notificationsEnabled {
+                    NotificationManager.shared.scheduleDailyReminders()
+                } else {
+                    NotificationManager.shared.cancelAll()
                 }
             }
         }
@@ -35,12 +44,15 @@ final class SessionViewModel: ObservableObject {
 
     // Combo pool for the current session (shuffled, refilled when exhausted)
     private var comboQueue: [Combo] = []
-    private var recentCodes: [String] = []
 
     // MARK: - Init
 
     init() {
         loadConfig()
+        Task {
+            await HealthKitManager.shared.requestAuthorization()
+            await NotificationManager.shared.requestAuthorization()
+        }
 
         roundTimer.$phase
             .receive(on: RunLoop.main)
@@ -73,7 +85,9 @@ final class SessionViewModel: ObservableObject {
     // MARK: - Session Control
 
     func startSession() {
+        HapticsEngine.shared.isEnabled = config.hapticsEnabled
         AudioEngine.shared.beginSession()
+        HealthKitManager.shared.workoutDidStart()
         rebuildPool()
         combosDelivered = 0
         isPaused = false
@@ -85,6 +99,26 @@ final class SessionViewModel: ObservableObject {
     }
 
     func stopSession() {
+        let record = WorkoutRecord(
+            id: UUID(),
+            date: Date(),
+            discipline: config.discipline.displayName,
+            mode: config.mode.displayName,
+            numberOfRounds: config.numberOfRounds,
+            roundDurationSeconds: config.roundDurationSeconds,
+            restDurationSeconds: config.restDurationSeconds,
+            combosDelivered: combosDelivered
+        )
+        if combosDelivered > 0 { HistoryStore.shared.save(record) }
+
+        let c = config
+        Task {
+            await HealthKitManager.shared.workoutDidEnd(
+                discipline: c.discipline,
+                roundDuration: c.roundDurationSeconds,
+                numberOfRounds: c.numberOfRounds
+            )
+        }
         roundTimer.stop()
         isPaused = false
         AudioEngine.shared.deactivateSession()
@@ -109,18 +143,8 @@ final class SessionViewModel: ObservableObject {
     private func nextCombo() -> Combo? {
         if comboQueue.isEmpty { rebuildPool() }
         guard !comboQueue.isEmpty else { return nil }
-
-        // Avoid repeating a combo seen in the last 8
-        var candidate = comboQueue.removeFirst()
-        if recentCodes.suffix(8).contains(candidate.code) && comboQueue.count > 2 {
-            comboQueue.append(candidate)
-            candidate = comboQueue.removeFirst()
-        }
-
-        recentCodes.append(candidate.code)
-        if recentCodes.count > 20 { recentCodes.removeFirst() }
         combosDelivered += 1
-        return candidate
+        return comboQueue.removeFirst()
     }
 
     private func rebuildPool() {
@@ -147,6 +171,7 @@ final class SessionViewModel: ObservableObject {
         d.set(config.warningTimeSeconds,             forKey: "warningTime")
         d.set(config.backgroundMusicEnabled,         forKey: "bgMusic")
         d.set(config.hapticsEnabled,                 forKey: "haptics")
+        d.set(config.notificationsEnabled,           forKey: "notifications")
     }
 
     private func loadConfig() {
@@ -176,6 +201,7 @@ final class SessionViewModel: ObservableObject {
 
         c.backgroundMusicEnabled = d.bool(forKey: "bgMusic")
         c.hapticsEnabled = d.object(forKey: "haptics") == nil ? true : d.bool(forKey: "haptics")
+        c.notificationsEnabled = d.bool(forKey: "notifications")
 
         config = c
     }

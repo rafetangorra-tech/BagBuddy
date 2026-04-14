@@ -41,5 +41,9 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Bag Buddy reads your workout history to show your progress over time.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Bag Buddy saves your bag workouts to Apple Health so you can track them alongside your other fitness activity — and sync them to WHOOP automatically.</string>
 </dict>
 </plist>

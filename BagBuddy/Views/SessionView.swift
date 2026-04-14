@@ -13,6 +13,8 @@ struct SessionView: View {
         return Double(secondsRemaining) / Double(total)
     }
 
+    @State private var showExitAlert = false
+
     var body: some View {
         VStack(spacing: 0) {
             headerArea
@@ -32,6 +34,12 @@ struct SessionView: View {
         .background(Color.bbBackground.ignoresSafeArea())
         .onAppear  { UIApplication.shared.isIdleTimerDisabled = true }
         .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
+        .alert("End Workout?", isPresented: $showExitAlert) {
+            Button("End Workout", role: .destructive) { vm.stopSession() }
+            Button("Keep Going", role: .cancel) {}
+        } message: {
+            Text("Your session progress will not be saved.")
+        }
     }
 
     // MARK: - Header
@@ -237,7 +245,7 @@ struct SessionView: View {
     private var controlsRow: some View {
         HStack(spacing: 16) {
             // Stop
-            Button { vm.stopSession() } label: {
+            Button { showExitAlert = true } label: {
                 ZStack {
                     Circle()
                         .fill(Color(hex: "#F5F5F5"))
