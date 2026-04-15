@@ -2,6 +2,7 @@ import SwiftUI
 
 struct HistoryView: View {
     @State private var records: [WorkoutRecord] = []
+    @State private var streak: Int = 0
 
     var body: some View {
         ZStack {
@@ -13,7 +14,10 @@ struct HistoryView: View {
                 recordsList
             }
         }
-        .onAppear { records = HistoryStore.shared.records }
+        .onAppear {
+            records = HistoryStore.shared.records
+            streak = HistoryStore.shared.currentStreak
+        }
     }
 
     // MARK: - Empty State
@@ -42,12 +46,44 @@ struct HistoryView: View {
     private var recordsList: some View {
         ScrollView {
             VStack(spacing: 12) {
+                if streak > 0 {
+                    streakBanner
+                }
                 ForEach(records) { record in
                     recordCard(record)
                 }
             }
             .padding(16)
         }
+    }
+
+    // MARK: - Streak Banner
+
+    private var streakBanner: some View {
+        HStack(spacing: 14) {
+            Text("🔥")
+                .font(.system(size: 32))
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("\(streak) DAY STREAK")
+                    .font(.custom("Oswald-SemiBold", size: 20))
+                    .foregroundColor(.bbTextPrimary)
+                    .kerning(1)
+                Text(streak == 1 ? "You trained today. Keep it going." : "You've shown up \(streak) days in a row.")
+                    .font(.system(size: 12, weight: .regular))
+                    .foregroundColor(.bbTextSecondary)
+            }
+            Spacer()
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color.bbSurface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke(Color.bbAccent.opacity(0.4), lineWidth: 1)
+                )
+        )
     }
 
     private func recordCard(_ record: WorkoutRecord) -> some View {

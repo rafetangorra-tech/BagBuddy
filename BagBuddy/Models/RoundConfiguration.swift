@@ -1,6 +1,6 @@
 import Foundation
 
-struct WorkoutConfiguration: Equatable {
+struct WorkoutConfiguration: Equatable, Codable {
     var discipline: Discipline           = .boxing
     var mode: WorkoutMode                = .noDefense
     var pacing: PacingPreset             = .normal
@@ -17,5 +17,6 @@ struct WorkoutConfiguration: Equatable {
     static let `default` = WorkoutConfiguration()
 }
 
-// Preserve PacingPreset conformance needed by SessionViewModel
+// Preserve PacingPreset conformances needed by SessionViewModel
 extension PacingPreset: Equatable {}
+extension PacingPreset: Codable {}

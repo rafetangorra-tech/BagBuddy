@@ -16,9 +16,16 @@ final class AudioEngine: NSObject {
     private var warningPlayer: AVAudioPlayer?
     private var beepPlayer:    AVAudioPlayer?
     private var musicPlayer:   AVAudioPlayer?
+    private var coachPlayer:   AVAudioPlayer?
 
-    // Continuations to await combo playback completion
+    // Continuations to await playback completion
     private var comboContinuation: CheckedContinuation<Void, Never>?
+    private var coachContinuation: CheckedContinuation<Void, Never>?
+
+    private static let coachFiles = [
+        "HandsUp", "KeepThePressureOn", "MakeItCount",
+        "PushThrough", "StayBusy", "WatchYourGuard"
+    ]
 
     private override init() {
         super.init()
@@ -59,6 +66,8 @@ final class AudioEngine: NSObject {
     /// to restore its full volume immediately.
     func deactivateSession() {
         stopBackgroundMusic()
+        skipCombo()
+        stopCoachLine()
         do {
             try AVAudioSession.sharedInstance().setActive(
                 false,
@@ -104,16 +113,55 @@ final class AudioEngine: NSObject {
 
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             comboContinuation = continuation
-            comboPlayer?.play()
+            if comboPlayer?.play() == false {
+                comboContinuation?.resume()
+                comboContinuation = nil
+            }
         }
+    }
+
+    /// Plays a random coach cue and suspends until it finishes.
+    /// Only called after combo audio + gap have fully completed — never overlaps.
+    func playCoachLine() async {
+        guard let name = Self.coachFiles.randomElement(),
+              let url = Bundle.main.url(forResource: name, withExtension: "mp3", subdirectory: "Audio/CoachCues")
+        else { return }
+
+        do {
+            coachPlayer?.stop()
+            coachPlayer = try AVAudioPlayer(contentsOf: url)
+            coachPlayer?.delegate = self
+            coachPlayer?.volume = 0.55
+            coachPlayer?.prepareToPlay()
+        } catch {
+            print("[AudioEngine] Failed to load coach cue: \(error)")
+            return
+        }
+
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            coachContinuation = continuation
+            if coachPlayer?.play() == false {
+                coachContinuation?.resume()
+                coachContinuation = nil
+            }
+        }
+    }
+
+    /// Force-stops coach audio and resolves any pending continuation.
+    func stopCoachLine() {
+        coachPlayer?.stop()
+        coachContinuation?.resume()
+        coachContinuation = nil
     }
 
     func pauseCombo() {
         comboPlayer?.pause()
+        coachPlayer?.pause()
     }
 
     func resumeCombo() {
         comboPlayer?.play()
+        coachPlayer?.play()
     }
 
     /// Stops the current combo audio and immediately resolves its awaitable continuation,
@@ -184,8 +232,13 @@ final class AudioEngine: NSObject {
 extension AudioEngine: AVAudioPlayerDelegate {
     nonisolated func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         Task { @MainActor in
-            self.comboContinuation?.resume()
-            self.comboContinuation = nil
+            if player === self.comboPlayer {
+                self.comboContinuation?.resume()
+                self.comboContinuation = nil
+            } else if player === self.coachPlayer {
+                self.coachContinuation?.resume()
+                self.coachContinuation = nil
+            }
         }
     }
 }

@@ -48,6 +48,8 @@ final class RoundTimerEngine: ObservableObject {
     func stop() {
         sessionTask?.cancel()
         sessionTask = nil
+        AudioEngine.shared.skipCombo()
+        AudioEngine.shared.stopCoachLine()
         currentCombo = nil
         drillSecondsRemaining = 0
         endBackgroundTask()
@@ -129,6 +131,9 @@ final class RoundTimerEngine: ObservableObject {
             // Combo delivery task
             group.addTask { [weak self] in
                 guard let self else { return }
+                // Let the round bell finish before calling the first combo
+                try? await self.pauseAwareSleep(seconds: 1.5)
+                guard !Task.isCancelled && Date() < endTime else { return }
                 while Date() < endTime && !Task.isCancelled {
                     // Wait while paused before starting the next combo
                     while self.isPaused && !Task.isCancelled {
@@ -147,11 +152,18 @@ final class RoundTimerEngine: ObservableObject {
                         elapsedTime: elapsed,
                         roundLength: roundDuration
                     )
+                    // Coach cue: 1-in-10 chance, only after combo audio + gap fully finish
+                    if Int.random(in: 0..<10) == 0 && Date() < endTime && !Task.isCancelled {
+                        await AudioEngine.shared.playCoachLine()
+                    }
                 }
             }
 
-            // When the timer task finishes, cancel the combo task
+            // Timer task finished — unblock any in-flight audio before cancelling
+            // so the combo delivery task isn't stuck waiting on a continuation
             await group.next()
+            AudioEngine.shared.skipCombo()
+            AudioEngine.shared.stopCoachLine()
             group.cancelAll()
         }
     }

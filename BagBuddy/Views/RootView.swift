@@ -6,6 +6,10 @@ struct RootView: View {
     @State private var showOnboarding = false
     @State private var showSessionIntro = false
 
+    private var hasSeenOnboarding: Bool {
+        UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
+    }
+
     var body: some View {
         ZStack {
             Color.bbBackground.ignoresSafeArea()
@@ -49,7 +53,9 @@ struct RootView: View {
                 LogoAnimationView {
                     withAnimation(.easeInOut(duration: 0.5)) {
                         showLaunchAnimation = false
-                        showOnboarding = true
+                        if !hasSeenOnboarding {
+                            showOnboarding = true
+                        }
                     }
                 }
                 .transition(.opacity)
@@ -59,6 +65,7 @@ struct RootView: View {
             // Onboarding — fades in after launch animation completes
             if showOnboarding {
                 OnboardingView(includeHealthSlide: true) {
+                    UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
                     withAnimation(.easeInOut(duration: 0.4)) {
                         showOnboarding = false
                     }
