@@ -11,7 +11,7 @@ final class NotificationManager {
     private let messages: [(title: String, body: String)] = [
         (
             title: "BAG BUDDY",
-            body: "\"My back is broken. Spinal. Yours isn't. Get on the bag.\" — Mike Tyson"
+            body: "\"My back is broken. Spinal. Yours isn't. Get on the bag.\""
         ),
         (
             title: "BAG BUDDY",
