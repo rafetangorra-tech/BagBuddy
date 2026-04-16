@@ -36,15 +36,19 @@ final class AudioEngine: NSObject {
     // MARK: - Session Configuration
 
     private func configureAudioSession() {
+        applyMixCategory()
+    }
+
+    private func applyMixCategory() {
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 .playback,
                 mode: .default,
-                // duckOthers: user's music keeps playing but lowers during call-outs,
-                // then restores automatically when BagBuddy audio stops.
-                // allowBluetooth / allowBluetoothA2DP: AirPods + A2DP headphones work
-                // without the user needing to change anything.
-                options: [.duckOthers, .allowBluetooth, .allowBluetoothA2DP]
+                // mixWithOthers: user's music plays alongside our callouts.
+                // duckOthers: temporarily reduces music volume while our audio plays,
+                // then restores it between combos (Siri-style duck-and-restore).
+                // allowBluetoothA2DP: AirPods / A2DP headphones output.
+                options: [.mixWithOthers, .duckOthers, .allowBluetoothA2DP]
             )
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
@@ -52,30 +56,18 @@ final class AudioEngine: NSObject {
         }
     }
 
-    /// Call at the start of every workout to ensure the session is active.
-    /// Needed because `deactivateSession()` makes it inactive at the end of a session.
+    /// Session is configured once at app init and stays active for the app's lifetime.
+    /// With mixWithOthers, we never interrupt other audio, so there's nothing to
+    /// re-activate. Re-activating was causing music apps to pause at round start.
     func beginSession() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            print("[AudioEngine] Session activation failed: \(error)")
-        }
+        // no-op
     }
 
-    /// Call when the workout session ends so the system tells Spotify / Apple Music
-    /// to restore its full volume immediately.
+    /// Stops our own audio but leaves the session active so music apps keep playing.
     func deactivateSession() {
         stopBackgroundMusic()
         skipCombo()
         stopCoachLine()
-        do {
-            try AVAudioSession.sharedInstance().setActive(
-                false,
-                options: .notifyOthersOnDeactivation
-            )
-        } catch {
-            print("[AudioEngine] Session deactivation failed: \(error)")
-        }
     }
 
     // MARK: - Pre-loading
@@ -105,10 +97,27 @@ final class AudioEngine: NSObject {
             comboPlayer?.stop()
             comboPlayer = try AVAudioPlayer(contentsOf: url)
             comboPlayer?.delegate = self
+            comboPlayer?.volume = 1.0
             comboPlayer?.prepareToPlay()
         } catch {
             print("[AudioEngine] Failed to load combo audio: \(error)")
             return
+        }
+
+        // Watchdog: if the delegate never fires (audio session interruption, etc.),
+        // force-resolve the continuation so the session task can never permanently hang.
+        let duration = comboPlayer?.duration ?? 3.0
+        let watchdog = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: UInt64(max(duration + 1.5, 4.0) * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            await MainActor.run {
+                guard let self else { return }
+                if self.comboContinuation != nil {
+                    self.comboPlayer?.stop()
+                    self.comboContinuation?.resume()
+                    self.comboContinuation = nil
+                }
+            }
         }
 
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
@@ -118,6 +127,7 @@ final class AudioEngine: NSObject {
                 comboContinuation = nil
             }
         }
+        watchdog.cancel()
     }
 
     /// Plays a random coach cue and suspends until it finishes.
@@ -138,6 +148,20 @@ final class AudioEngine: NSObject {
             return
         }
 
+        let duration = coachPlayer?.duration ?? 2.0
+        let watchdog = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: UInt64(max(duration + 1.5, 4.0) * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            await MainActor.run {
+                guard let self else { return }
+                if self.coachContinuation != nil {
+                    self.coachPlayer?.stop()
+                    self.coachContinuation?.resume()
+                    self.coachContinuation = nil
+                }
+            }
+        }
+
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
             coachContinuation = continuation
             if coachPlayer?.play() == false {
@@ -145,6 +169,7 @@ final class AudioEngine: NSObject {
                 coachContinuation = nil
             }
         }
+        watchdog.cancel()
     }
 
     /// Force-stops coach audio and resolves any pending continuation.
@@ -180,12 +205,14 @@ final class AudioEngine: NSObject {
     }
 
     func playRoundEnd() {
-        let player = loadPlayer(resource: "Round End", ext: "mp3", subdir: "Audio/SFX")
-        player?.play()
+        // Reassign to bellPlayer so the player isn't deallocated before playback finishes
+        bellPlayer = loadPlayer(resource: "Round End", ext: "mp3", subdir: "Audio/SFX")
+        bellPlayer?.play()
     }
 
     func playWarning() {
-        warningPlayer?.currentTime = 0
+        // Reload each call to guarantee a valid player on device
+        warningPlayer = loadPlayer(resource: "Warning", ext: "mp3", subdir: "Audio/SFX")
         warningPlayer?.play()
     }
 
@@ -195,9 +222,9 @@ final class AudioEngine: NSObject {
     }
 
     func playCountdownBeep() {
-        let player = loadPlayer(resource: "Warning", ext: "mp3", subdir: "Audio/SFX")
-        player?.volume = 0.6
-        player?.play()
+        beepPlayer = loadPlayer(resource: "Warning", ext: "mp3", subdir: "Audio/SFX")
+        beepPlayer?.volume = 0.6
+        beepPlayer?.play()
     }
 
     // MARK: - Background Music

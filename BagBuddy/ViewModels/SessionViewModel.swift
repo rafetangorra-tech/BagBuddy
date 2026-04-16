@@ -151,6 +151,15 @@ final class SessionViewModel: ObservableObject {
         let pool: [Combo]
         if config.mode == .drill {
             pool = ComboService.shared.drillPool(discipline: config.discipline)
+        } else if config.mode == .withDefense && config.discipline == .boxing {
+            // Boxing Stick & Move: mix in short offensive breakers (1–2 action combos)
+            // to interrupt the defense rhythm and keep things realistic.
+            let defensive = ComboService.shared.callOutPool(discipline: .boxing, mode: .withDefense)
+            let breakers = ComboService.shared.callOutPool(discipline: .boxing, mode: .noDefense)
+                .filter { $0.actionCount <= 2 }
+            let breakerCount = max(1, defensive.count / 5)
+            let selectedBreakers = Array(breakers.shuffled().prefix(breakerCount))
+            pool = defensive + selectedBreakers
         } else {
             pool = ComboService.shared.callOutPool(discipline: config.discipline, mode: config.mode)
         }

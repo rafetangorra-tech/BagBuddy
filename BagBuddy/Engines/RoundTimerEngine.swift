@@ -59,11 +59,10 @@ final class RoundTimerEngine: ObservableObject {
     // MARK: - Session Loop
 
     private func runSession(config: WorkoutConfiguration) async {
-        // 3-2-1 countdown
+        // 3-2-1 countdown (silent — audio begins on the round start bell)
         for i in stride(from: 3, through: 1, by: -1) {
             guard !Task.isCancelled else { return }
             phase = .countdown(secondsRemaining: i)
-            AudioEngine.shared.playCountdownBeep()
             await MainActor.run { HapticsEngine.shared.countdownTick() }
             try? await Task.sleep(nanoseconds: 1_000_000_000)
         }
@@ -140,11 +139,14 @@ final class RoundTimerEngine: ObservableObject {
                         try? await Task.sleep(nanoseconds: 100_000_000)
                     }
                     guard !Task.isCancelled && Date() < endTime else { break }
-                    guard let combo = self.onNeedNextCombo?() else { break }
-                    await MainActor.run {
-                        self.currentCombo = combo
+                    // Fetch + publish combo on the main actor to avoid data races
+                    let fetchedCombo: Combo? = await MainActor.run {
+                        guard let next = self.onNeedNextCombo?() else { return nil as Combo? }
+                        self.currentCombo = next
                         HapticsEngine.shared.comboDelivered()
+                        return next
                     }
+                    guard let combo = fetchedCombo else { break }
                     let elapsed = Date().timeIntervalSince(startTime)
                     await TimingEngine.shared.cueCombo(
                         combo,
@@ -152,6 +154,16 @@ final class RoundTimerEngine: ObservableObject {
                         elapsedTime: elapsed,
                         roundLength: roundDuration
                     )
+                    // 1-in-7 chance to repeat the same combo for emphasis, like a coach would
+                    if Int.random(in: 0..<7) == 0 && Date() < endTime && !Task.isCancelled {
+                        let repeatElapsed = Date().timeIntervalSince(startTime)
+                        await TimingEngine.shared.cueCombo(
+                            combo,
+                            pacing: config.pacing,
+                            elapsedTime: repeatElapsed,
+                            roundLength: roundDuration
+                        )
+                    }
                     // Coach cue: 1-in-10 chance, only after combo audio + gap fully finish
                     if Int.random(in: 0..<10) == 0 && Date() < endTime && !Task.isCancelled {
                         await AudioEngine.shared.playCoachLine()
