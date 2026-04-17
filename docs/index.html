@@ -3,541 +3,415 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bag Buddy - Heavy Bag Training App for Boxing & Muay Thai</title>
-    <meta name="description" content="The no-nonsense heavy bag training app. Spoken combo callouts, configurable rounds, coach audio. Hands-free. Just you and the bag.">
+    <title>Bag Buddy — Heavy Bag Training App for Boxing & Muay Thai</title>
+    <meta name="description" content="The no-nonsense heavy bag training app. Spoken combo callouts, coach audio, full round timing. Hands-free. Just you and the bag.">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        @font-face { font-family: "Oswald"; src: url("fonts/Oswald-Medium.ttf"); font-weight: 500; font-display: swap; }
+        @font-face { font-family: "Oswald"; src: url("fonts/Oswald-SemiBold.ttf"); font-weight: 600; font-display: swap; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --red: #E03030;
-            --red-dark: #C42020;
             --bg: #0A0A0A;
-            --bg-card: #141414;
-            --bg-card-hover: #1A1A1A;
-            --text: #FFFFFF;
-            --text-dim: #888888;
-            --text-muted: #555555;
-            --border: #222222;
+            --surface: #141414;
+            --raised: #1A1A1A;
+            --fg: #FFFFFF;
+            --muted: #888888;
+            --faint: #555555;
+            --border: rgba(255,255,255,0.08);
+            --border-solid: #222222;
+            --red: #E43030;
+            --red-hover: #FF4040;
+            --red-dim: #C42020;
+            --oswald: "Oswald", Impact, sans-serif;
+            --ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+            --ease: cubic-bezier(.4,0,.2,1);
         }
 
         html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
+        body { font-family: var(--ui); background: var(--bg); color: var(--fg); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+        a { text-decoration: none; }
+        img { display: block; }
 
         /* NAV */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-        }
-        .nav-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-        }
-        .nav-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text);
-            letter-spacing: 1px;
-        }
-        .nav-links { display: flex; gap: 32px; align-items: center; }
-        .nav-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--text); }
-        .nav-cta {
-            background: var(--red) !important;
-            color: white !important;
-            padding: 8px 20px;
-            border-radius: 100px;
-            font-weight: 600 !important;
-            transition: background 0.2s !important;
-        }
-        .nav-cta:hover { background: var(--red-dark) !important; }
+        .nav { position: sticky; top: 0; z-index: 50; background: rgba(10,10,10,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: 1200px; margin: 0 auto; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+        .nav-brand { display: flex; align-items: center; gap: 10px; color: var(--fg); }
+        .nav-brand img { height: 28px; border-radius: 6px; }
+        .nav-brand span { font-family: var(--oswald); font-weight: 600; font-size: 18px; letter-spacing: 2px; }
+        .nav-links { display: flex; align-items: center; gap: 28px; }
+        .nav-links a { color: var(--muted); font-size: 13px; font-weight: 500; transition: color 150ms; }
+        .nav-links a:hover { color: var(--fg); }
+
+        /* APP STORE BUTTON */
+        .appstore-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--fg); color: var(--bg); padding: 10px 18px; border-radius: 8px; transition: background 150ms var(--ease); }
+        .appstore-btn:hover { background: #EEE; }
+        .appstore-btn svg { flex-shrink: 0; }
+        .appstore-btn .label-top { font-size: 9px; font-weight: 500; letter-spacing: 0.5px; opacity: 0.7; line-height: 1; }
+        .appstore-btn .label-bot { font-size: 14px; font-weight: 600; line-height: 1.2; }
+        .appstore-btn--compact { padding: 8px 14px; }
+        .appstore-btn--compact .label-top { font-size: 8px; }
+        .appstore-btn--compact .label-bot { font-size: 12px; }
+
+        /* GHOST BUTTON */
+        .ghost-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px; border: 1px solid var(--border); border-radius: 8px; color: var(--fg); font-size: 14px; font-weight: 500; transition: border-color 150ms var(--ease); }
+        .ghost-btn:hover { border-color: rgba(255,255,255,0.25); }
+
+        /* TYPOGRAPHY */
+        .eyebrow { font-family: var(--oswald); font-size: 13px; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: var(--red); }
+        .headline { font-family: var(--oswald); font-weight: 600; letter-spacing: -2px; line-height: 0.95; text-transform: uppercase; color: var(--fg); }
+        .headline span { color: var(--red); }
+        .sub { font-size: 18px; line-height: 1.55; color: var(--muted); }
 
         /* HERO */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 40px 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -200px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(224, 48, 48, 0.12) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .hero-content {
-            text-align: center;
-            max-width: 800px;
-            z-index: 1;
-        }
-        .hero-badge {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--red);
-            border: 1px solid rgba(224, 48, 48, 0.3);
-            padding: 6px 16px;
-            border-radius: 100px;
-            margin-bottom: 32px;
-            position: relative;
-            right: 40px;
-        }
-        .hero h1 {
-            font-size: clamp(48px, 8vw, 96px);
-            font-weight: 900;
-            line-height: 0.95;
-            letter-spacing: -3px;
-            margin-bottom: 24px;
-        }
+        .hero { position: relative; overflow: hidden; padding: 120px 32px 100px; }
+        .hero-glow { position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(228,48,48,0.25), transparent 60%); filter: blur(40px); pointer-events: none; }
+        .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; position: relative; }
+        .hero-text { display: flex; flex-direction: column; gap: 28px; }
+        .hero h1 { font-family: var(--oswald); font-size: 104px; font-weight: 600; letter-spacing: -3px; line-height: 0.92; text-transform: uppercase; }
         .hero h1 span { color: var(--red); }
-        .hero-sub {
-            font-size: clamp(16px, 2vw, 20px);
-            color: var(--text-dim);
-            line-height: 1.6;
-            max-width: 560px;
-            margin: 0 auto 48px;
-        }
-        .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 16px 32px;
-            border-radius: 100px;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .btn-primary { background: var(--red); color: white; }
-        .btn-primary:hover { background: var(--red-dark); transform: translateY(-1px); }
-        .btn-secondary {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        .btn-secondary:hover { border-color: var(--text-muted); }
+        .hero-buttons { display: flex; gap: 12px; margin-top: 8px; }
+        .hero-meta { display: flex; gap: 24px; margin-top: 16px; font-size: 12px; color: var(--faint); }
+        .mascot-wrap { display: flex; justify-content: center; position: relative; }
+        .mascot-glow { position: absolute; inset: -20%; background: radial-gradient(circle, rgba(228,48,48,0.35), transparent 65%); filter: blur(20px); }
+        .mascot-wrap img { height: 360px; position: relative; z-index: 1; filter: drop-shadow(0 30px 60px rgba(228,48,48,0.4)); }
 
-        /* PHONE SHOWCASE */
-        .phone-showcase {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            padding: 0 40px 100px;
-            flex-wrap: wrap;
-        }
-        .phone-frame {
-            width: 220px;
-            border-radius: 28px;
-            overflow: hidden;
-            border: 2px solid var(--border);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .phone-frame:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 50px 100px rgba(224, 48, 48, 0.15);
-        }
-        .phone-frame img {
-            width: 100%;
-            display: block;
-        }
+        /* SECTIONS */
+        .section { padding: 100px 32px; }
+        .section--bordered { border-top: 1px solid var(--border); }
+        .section-inner { max-width: 1200px; margin: 0 auto; }
+        .section-header { margin-bottom: 60px; }
+        .section-header--center { text-align: center; }
+        .section-header--split { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: end; }
 
-        /* FEATURES */
-        .features {
-            padding: 100px 40px;
-            border-top: 1px solid var(--border);
-        }
-        .section-label {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--red);
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .section-title {
-            font-size: clamp(32px, 4vw, 48px);
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            text-align: center;
-            margin-bottom: 16px;
-        }
-        .section-desc {
-            font-size: 16px;
-            color: var(--text-dim);
-            text-align: center;
-            max-width: 560px;
-            margin: 0 auto 64px;
-            line-height: 1.6;
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .feature-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px;
-            transition: background 0.2s, border-color 0.2s;
-        }
-        .feature-card:hover {
-            background: var(--bg-card-hover);
-            border-color: #333;
-        }
-        .feature-icon {
-            font-size: 28px;
-            margin-bottom: 16px;
-        }
-        .feature-card h3 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.3px;
-        }
-        .feature-card p {
-            font-size: 14px;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
+        /* FEATURE CARDS */
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 14px; transition: background 150ms, border-color 150ms; }
+        .feature-card:hover { background: var(--raised); border-color: rgba(255,255,255,0.12); }
+        .feature-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(228,48,48,0.12); color: var(--red); display: flex; align-items: center; justify-content: center; }
+        .feature-card h3 { font-family: var(--oswald); font-size: 22px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .feature-card p { font-size: 14px; line-height: 1.55; color: var(--muted); }
 
-        /* MODES */
-        .modes {
-            padding: 100px 40px;
-            border-top: 1px solid var(--border);
-        }
-        .modes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .mode-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 40px 32px;
-            text-align: center;
-            transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-        .mode-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--red);
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .mode-card:hover::before { opacity: 1; }
-        .mode-card:hover { border-color: #333; }
-        .mode-number {
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--red);
-            opacity: 0.3;
-            margin-bottom: 8px;
-        }
-        .mode-card h3 {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-        .mode-card p {
-            font-size: 14px;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
+        /* MODE CARDS */
+        .modes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .mode-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; gap: 12px; transition: border-color 150ms; }
+        .mode-card:hover { border-color: rgba(255,255,255,0.15); }
+        .mode-card--accent { background: linear-gradient(180deg, rgba(228,48,48,0.12), rgba(228,48,48,0.02)); border-color: rgba(228,48,48,0.4); }
+        .mode-card .code { font-family: var(--oswald); font-size: 11px; font-weight: 500; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+        .mode-card--accent .code { color: var(--red); }
+        .mode-card h3 { font-family: var(--oswald); font-size: 32px; font-weight: 600; letter-spacing: -0.5px; text-transform: uppercase; line-height: 0.95; }
+        .mode-card p { font-size: 15px; line-height: 1.5; color: var(--muted); }
 
-        /* STATS */
-        .stats {
-            padding: 80px 40px;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .stats-grid {
-            display: flex;
-            justify-content: center;
-            gap: 80px;
-            flex-wrap: wrap;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .stat { text-align: center; }
-        .stat-number {
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--red);
-            letter-spacing: -2px;
-        }
-        .stat-label {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            margin-top: 4px;
-        }
+        /* SCREENSHOTS */
+        .screenshots { display: flex; gap: 24px; justify-content: center; align-items: flex-end; }
+        .phone-frame { border-radius: 36px; border: 2px solid #1F1F1F; box-shadow: 0 50px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04); overflow: hidden; background: #000; transition: transform 300ms var(--ease); }
+        .phone-frame:hover { transform: translateY(-8px); }
+        .phone-frame img { width: 100%; }
+        .phone-frame--main { width: 280px; }
+        .phone-frame--side { width: 252px; }
 
-        /* CTA */
-        .cta {
-            padding: 120px 40px;
-            text-align: center;
-        }
-        .cta h2 {
-            font-size: clamp(36px, 5vw, 56px);
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 16px;
-        }
-        .cta h2 span { color: var(--red); }
-        .cta p {
-            font-size: 16px;
-            color: var(--text-dim);
-            margin-bottom: 40px;
-        }
+        /* PRICING */
+        .price-card { background: linear-gradient(180deg, rgba(228,48,48,0.08), rgba(228,48,48,0.02)); border: 1px solid rgba(228,48,48,0.4); border-radius: 20px; padding: 48px; text-align: center; max-width: 460px; margin: 0 auto; }
+        .price-card .price { font-family: var(--oswald); font-size: 96px; font-weight: 700; letter-spacing: -4px; line-height: 1; margin: 20px 0 8px; }
+        .price-card .price-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; }
+        .price-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; text-align: left; }
+        .price-features .item { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .price-features svg { flex-shrink: 0; }
+
+        /* QUOTES */
+        .quotes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .quote-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px; }
+        .quote-card .mark { color: var(--red); font-family: var(--oswald); font-size: 64px; font-weight: 700; line-height: 0.5; height: 28px; margin-bottom: 16px; }
+        .quote-card p { font-size: 17px; line-height: 1.5; }
+        .quote-card .author { margin-top: 18px; font-family: var(--oswald); font-size: 12px; font-weight: 500; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+
+        /* FAQ */
+        .faq-list { display: flex; flex-direction: column; gap: 12px; max-width: 800px; margin: 0 auto; }
+        .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+        .faq-item h3 { font-family: var(--oswald); font-size: 20px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+        .faq-item p { margin-top: 10px; font-size: 14px; line-height: 1.6; color: var(--muted); }
+
+        /* FINAL CTA */
+        .final-cta { position: relative; overflow: hidden; padding: 120px 32px; text-align: center; border-top: 1px solid var(--border); }
+        .final-cta .glow { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(228,48,48,0.15), transparent 60%); }
+        .final-cta-inner { position: relative; max-width: 800px; margin: 0 auto; }
 
         /* FOOTER */
-        footer {
-            padding: 40px;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-        footer p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-        footer a {
-            color: var(--text-dim);
-            text-decoration: none;
-        }
-        footer a:hover { color: var(--text); }
-        .footer-links {
-            display: flex;
-            gap: 24px;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
+        footer { padding: 40px 32px; background: #050505; border-top: 1px solid var(--border); }
+        .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .footer-links { display: flex; gap: 24px; font-size: 12px; color: var(--faint); }
+        .footer-links a { color: var(--faint); transition: color 150ms; }
+        .footer-links a:hover { color: var(--fg); }
 
         /* RESPONSIVE */
-        @media (max-width: 768px) {
-            nav { padding: 16px 20px; }
-            .nav-links a:not(.nav-cta) { display: none; }
-            .hero { padding: 100px 24px 60px; }
-            .hero-badge { right: 0; }
-            .phone-showcase { gap: 12px; padding: 0 20px 80px; }
-            .phone-frame { width: 160px; border-radius: 20px; }
-            .features, .modes, .cta { padding: 80px 24px; }
-            .stats-grid { gap: 40px; }
+        @media (max-width: 900px) {
+            .hero-inner { grid-template-columns: 1fr; text-align: center; }
+            .hero h1 { font-size: 64px; letter-spacing: -2px; }
+            .hero-text { align-items: center; }
+            .hero-buttons { justify-content: center; }
+            .hero-meta { justify-content: center; }
+            .mascot-wrap img { height: 260px; }
+            .features-grid, .modes-grid, .quotes-grid { grid-template-columns: 1fr; }
+            .section-header--split { grid-template-columns: 1fr; }
+            .screenshots { flex-wrap: wrap; gap: 16px; }
+            .phone-frame--main, .phone-frame--side { width: 200px; }
+            .nav-links a:not(.appstore-btn) { display: none; }
+            .nav-inner { padding: 12px 20px; }
+            .section { padding: 80px 24px; }
+            .headline { font-size: 48px !important; }
         }
         @media (max-width: 480px) {
-            .phone-frame { width: 130px; border-radius: 16px; }
-            .hero h1 { letter-spacing: -2px; }
+            .hero h1 { font-size: 48px; }
+            .hero { padding: 100px 20px 60px; }
+            .phone-frame--main, .phone-frame--side { width: 160px; border-radius: 24px; }
         }
     </style>
 </head>
 <body>
 
     <!-- NAV -->
-    <nav>
-        <a href="#" class="nav-brand">
-            <img src="images/icon.png" alt="Bag Buddy" class="nav-icon">
-            <span class="nav-name">BAG BUDDY</span>
-        </a>
-        <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="#modes">Modes</a>
-            <a href="https://apps.apple.com/us/app/the-bag-buddy/id6762319334" class="nav-cta">Download</a>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-brand">
+                <img src="images/icon.png" alt="">
+                <span>BAG BUDDY</span>
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#modes">Modes</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#faq">FAQ</a>
+                <a href="https://apps.apple.com/us/app/the-bag-buddy/id6762319334" class="appstore-btn appstore-btn--compact">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                    <div><div class="label-top">Download on the</div><div class="label-bot">App Store</div></div>
+                </a>
+            </div>
         </div>
     </nav>
 
     <!-- HERO -->
     <section class="hero">
-        <div class="hero-content">
-            <img src="images/logo.png" alt="Bag Buddy" style="height: 580px; margin-top: -40px; margin-bottom: -60px; filter: drop-shadow(0 30px 60px rgba(224, 48, 48, 0.3));">
-            <div class="hero-badge">Boxing & Muay Thai</div>
-            <h1>Train Like<br>You <span>Fight.</span></h1>
-            <p class="hero-sub">
-                The no-nonsense heavy bag training app. Spoken combo callouts, coach audio,
-                and full round timing - all hands-free so you stay locked in on the bag.
-            </p>
-            <div class="hero-buttons">
-                <a href="https://apps.apple.com/us/app/the-bag-buddy/id6762319334" class="btn btn-primary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                    Download on the App Store
-                </a>
-                <a href="#features" class="btn btn-secondary">Learn More</a>
+        <div class="hero-glow"></div>
+        <div class="hero-inner">
+            <div class="hero-text">
+                <div class="eyebrow">BOXING · MUAY THAI</div>
+                <h1>TRAIN LIKE<br><span>YOU FIGHT.</span></h1>
+                <p class="sub" style="max-width:460px">The heavy bag coaching app. Combos called out loud, full round timing, zero subscriptions. Built by a fighter who actually uses it.</p>
+                <div class="hero-buttons">
+                    <a href="https://apps.apple.com/us/app/the-bag-buddy/id6762319334" class="appstore-btn">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                        <div><div class="label-top">Download on the</div><div class="label-bot">App Store</div></div>
+                    </a>
+                    <a href="#features" class="ghost-btn">See how it works →</a>
+                </div>
+                <div class="hero-meta">
+                    <span>iOS 17+</span><span>·</span><span>Free forever</span>
+                </div>
+            </div>
+            <div class="mascot-wrap">
+                <div class="mascot-glow"></div>
+                <img src="images/logo.png" alt="Bag Buddy">
             </div>
         </div>
     </section>
 
-    <!-- PHONE SHOWCASE -->
-    <div class="phone-showcase">
-        <div class="phone-frame"><img src="images/home.png" alt="Home Screen"></div>
-        <div class="phone-frame"><img src="images/session.png" alt="Active Session"></div>
-        <div class="phone-frame"><img src="images/history.png" alt="History & Streaks"></div>
-        <div class="phone-frame"><img src="images/settings.png" alt="Settings"></div>
-    </div>
-
     <!-- FEATURES -->
-    <section class="features" id="features">
-        <p class="section-label">Features</p>
-        <h2 class="section-title">Everything You Need.<br>Nothing You Don't.</h2>
-        <p class="section-desc">No subscriptions. No gamification. No fluff. Just real training tools built by a fighter who actually uses them.</p>
-
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div>
-                <h3>Spoken Combo Callouts</h3>
-                <p>Crisp, clear audio calls out every combination so your eyes stay on the bag, not your phone.</p>
+    <section class="section section--bordered" id="features">
+        <div class="section-inner">
+            <div class="section-header">
+                <div class="eyebrow">FEATURES</div>
+                <h2 class="headline" style="font-size:64px;margin-top:12px">EVERYTHING YOU NEED.<br>NOTHING YOU DON'T.</h2>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-                <h3>Coach Audio Drops</h3>
-                <p>Random motivational cues between combos. Hands up. Stay busy. Push through. Just like a real coach.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                <h3>Full Round Timer</h3>
-                <p>1-12 rounds, 30 seconds to 10 minutes each. Configurable rest, warning bell, and pacing.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-                <h3>Music Friendly</h3>
-                <p>Play your own music from Spotify or Apple Music. Callouts duck the music, then restore it automatically.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-                <h3>Apple Health & WHOOP</h3>
-                <p>Every session logged as a boxing workout with estimated calories. Syncs to WHOOP automatically via Apple Health.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-                <h3>Streak Tracking</h3>
-                <p>Session history with a daily training streak to keep you accountable. Your coach checks in at 5 PM every day.</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a3 3 0 00-3 3v8a3 3 0 006 0V5a3 3 0 00-3-3z"/><path d="M19 10v3a7 7 0 01-14 0v-3M12 20v3M8 23h8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+                    <h3>HANDS-FREE CALLOUTS</h3>
+                    <p>Numbered combos called out over your music. Eyes on the bag, not the screen.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg></div>
+                    <h3>REAL ROUND TIMING</h3>
+                    <p>Configurable rounds, rest, and warning bells. Same cadence as your gym.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+                    <h3>THREE MODES</h3>
+                    <p>Stand and Bang for offense. Stick and Move with defense. Drillers for repetition.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+                    <h3>MUSIC INTEGRATION</h3>
+                    <p>Spotify and Apple Music play through your session. Callouts duck automatically.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+                    <h3>COACH VOICE</h3>
+                    <p>Real fighter cues between rounds. Recovery prompts. No upbeat fluff.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 11-14 0M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></div>
+                    <h3>ZERO BLOAT</h3>
+                    <p>No XP. No social feed. No subscription. No ads. Just train.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- MODES -->
-    <section class="modes" id="modes">
-        <p class="section-label">Training Modes</p>
-        <h2 class="section-title">Three Ways to Work.</h2>
-        <p class="section-desc">Boxing and Muay Thai. Offense, defense, or drill. Pick your discipline, pick your mode, and go.</p>
-
-        <div class="modes-grid">
-            <div class="mode-card">
-                <div class="mode-number">01</div>
-                <h3>Stand and Bang</h3>
-                <p>Pure offense. Back-to-back strike combinations called out loud. No defense - just commit to every punch and keep moving forward.</p>
+    <section class="section section--bordered" id="modes">
+        <div class="section-inner">
+            <div class="section-header section-header--split">
+                <div>
+                    <div class="eyebrow">MODES</div>
+                    <h2 class="headline" style="font-size:64px;margin-top:12px">THREE WAYS<br>TO PUT IN WORK.</h2>
+                </div>
+                <p class="sub">Each mode rewires what the announcer calls and how the timer is used. Mix them across your week.</p>
             </div>
-            <div class="mode-card">
-                <div class="mode-number">02</div>
-                <h3>Stick and Move</h3>
-                <p>Combos with defensive moves built in. Slips, rolls, pivots, checks. Work the bag like you're in a real fight.</p>
-            </div>
-            <div class="mode-card">
-                <div class="mode-number">03</div>
-                <h3>Drillers Make Killers</h3>
-                <p>One complex combination at a time. Drill it for 60 seconds until it's muscle memory. Then move to the next.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- STATS -->
-    <section class="stats">
-        <div class="stats-grid">
-            <div class="stat">
-                <div class="stat-number">149</div>
-                <div class="stat-label">Combinations</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">2</div>
-                <div class="stat-label">Disciplines</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">3</div>
-                <div class="stat-label">Training Modes</div>
-            </div>
-            <div class="stat">
-                <div class="stat-number">$0</div>
-                <div class="stat-label">Price. Forever.</div>
+            <div class="modes-grid">
+                <div class="mode-card">
+                    <div class="code">MODE 01</div>
+                    <h3>STAND<br>AND BANG</h3>
+                    <p>Pure offense. Numbered combos called back to back. No defense — just sit down and throw.</p>
+                </div>
+                <div class="mode-card mode-card--accent">
+                    <div class="code">MODE 02</div>
+                    <h3>STICK<br>AND MOVE</h3>
+                    <p>Combos with a defensive move included. Slip, roll, pull, then counter. Hit and don't get hit.</p>
+                </div>
+                <div class="mode-card">
+                    <div class="code">MODE 03</div>
+                    <h3>DRILLERS<br>MAKE KILLERS</h3>
+                    <p>One complex combo. Repeat for a full minute. Drill it until it's reflex.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta" id="download">
-        <h2>Ready to <span>Work?</span></h2>
-        <p>Download Bag Buddy. Start a round. Hit the bag.</p>
-        <a href="#" class="btn btn-primary">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            Download on the App Store
-        </a>
+    <!-- SCREENSHOTS -->
+    <section class="section" style="position:relative;overflow:hidden">
+        <div style="position:absolute;bottom:-200px;left:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(228,48,48,0.18),transparent 60%);filter:blur(40px)"></div>
+        <div class="section-inner" style="position:relative">
+            <div class="section-header section-header--center">
+                <div class="eyebrow">THE APP</div>
+                <h2 class="headline" style="font-size:64px;margin-top:12px">BUILT FOR THE BAG.</h2>
+            </div>
+            <div class="screenshots">
+                <div class="phone-frame phone-frame--side" style="transform:translateY(20px) rotate(-2deg)"><img src="images/home.png" alt="Home"></div>
+                <div class="phone-frame phone-frame--main"><img src="images/session.png" alt="Session"></div>
+                <div class="phone-frame phone-frame--side" style="transform:translateY(20px) rotate(2deg)"><img src="images/history.png" alt="History"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="section section--bordered" id="pricing">
+        <div class="section-inner">
+            <div class="section-header section-header--center">
+                <div class="eyebrow">PRICING</div>
+                <h2 class="headline" style="font-size:64px;margin-top:12px">NO SUBSCRIPTION.<br><span>EVER.</span></h2>
+                <p class="sub" style="margin-top:16px">Built by a fighter, not a startup. One price. Forever.</p>
+            </div>
+            <div class="price-card">
+                <div class="eyebrow">FREE FOREVER</div>
+                <div class="price">$0</div>
+                <div class="price-sub">No subscription. No ads. No tracking.</div>
+                <div class="price-features">
+                    <div class="item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E43030" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg> All combos (boxing + Muay Thai)</div>
+                    <div class="item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E43030" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg> All three training modes</div>
+                    <div class="item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E43030" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg> Full session history</div>
+                    <div class="item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E43030" stroke-width="3" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg> Audio cues & coach voice</div>
+                </div>
+                <a href="https://apps.apple.com/us/app/the-bag-buddy/id6762319334" class="appstore-btn" style="justify-content:center">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                    <div><div class="label-top">Download on the</div><div class="label-bot">App Store</div></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section section--bordered">
+        <div class="section-inner">
+            <div class="section-header section-header--center">
+                <div class="eyebrow">FROM THE GYM</div>
+                <h2 class="headline" style="font-size:56px;margin-top:12px">FIGHTERS USE IT.</h2>
+            </div>
+            <div class="quotes-grid">
+                <div class="quote-card">
+                    <div class="mark">"</div>
+                    <p>Finally a timer app that doesn't treat me like I'm new. The Stick and Move combos are exactly what shadowboxing class drills look like.</p>
+                    <div class="author">MARCUS T. · BOXING COACH</div>
+                </div>
+                <div class="quote-card">
+                    <div class="mark">"</div>
+                    <p>No subscription, no nonsense. I just plug it in, pick a mode, and work. The Drillers mode killed my lazy 1-2.</p>
+                    <div class="author">AMINA K. · AMATEUR</div>
+                </div>
+                <div class="quote-card">
+                    <div class="mark">"</div>
+                    <p>The audio cues are timed perfectly. I can run rounds without ever looking at the screen. Hands stay up where they belong.</p>
+                    <div class="author">DEV R. · MUAY THAI</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section section--bordered" id="faq">
+        <div class="section-inner">
+            <div class="section-header section-header--center">
+                <div class="eyebrow">FAQ</div>
+                <h2 class="headline" style="font-size:56px;margin-top:12px">ANSWERS.</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h3>IS IT ACTUALLY FREE?</h3>
+                    <p>Yes. No subscriptions, no in-app purchases, no ads, no tracking. The whole app — every mode, every combo, full history — is free.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>WHY NO ANDROID?</h3>
+                    <p>Solo developer who fights, builds the app he uses. iOS first because that's what's in his gym bag. Android may follow if there's demand.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>WHERE DO THE COMBOS COME FROM?</h3>
+                    <p>Curated by working coaches. Numbered notation matches what you hear in any boxing or Muay Thai gym — 1 = jab, 2 = cross, etc.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>DOES IT WORK OVER MUSIC?</h3>
+                    <p>Yes. The combo callouts duck your music briefly, like a navigation app. You stay in your zone.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+        <div class="glow"></div>
+        <div class="final-cta-inner">
+            <h2 class="headline" style="font-size:96px">READY TO WORK?</h2>
+            <p class="sub" style="margin-top:16px">Free. Forever. Built by a fighter.</p>
+            <div style="margin-top:36px;display:flex;justify-content:center">
+                <a href="https://apps.apple.com/us/app/the-bag-buddy/id6762319334" class="appstore-btn">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+                    <div><div class="label-top">Download on the</div><div class="label-bot">App Store</div></div>
+                </a>
+            </div>
+        </div>
     </section>
 
     <!-- FOOTER -->
     <footer>
-        <div class="footer-links">
-            <a href="privacy-policy.html">Privacy Policy</a>
-            <a href="mailto:rafe@bagbuddyapp.com">Contact</a>
+        <div class="footer-inner">
+            <a href="#" class="nav-brand">
+                <img src="images/icon.png" alt="" style="height:22px;border-radius:4px">
+                <span style="font-family:var(--oswald);font-weight:600;font-size:14px;letter-spacing:2px">BAG BUDDY</span>
+            </a>
+            <div class="footer-links">
+                <a href="privacy-policy.html">Privacy</a>
+                <a href="mailto:rafe@bagbuddyapp.com">Support</a>
+                <span>© 2026 BAG BUDDY · BEEN HIT. STILL GRINNING.</span>
+            </div>
         </div>
-        <p>&copy; 2026 Bag Buddy. All rights reserved. Built by a fighter, for fighters.</p>
     </footer>
 
 </body>
