@@ -1,699 +1,1052 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bag Buddy - Investor Deck</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+<meta charset="UTF-8">
+<title>Bag Buddy — Investor Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0A0A;
+  --surface: #141414;
+  --surface-hi: #1A1A1A;
+  --border: #222;
+  --border-hi: #333;
+  --red: #E43030;
+  --red-dim: #B02D38;
+  --white: #FFFFFF;
+  --dim: #888;
+  --muted: #555;
+  --faint: #2A2A2A;
+  --display: 'Oswald', 'Helvetica Neue', sans-serif;
+  --body: 'Inter', -apple-system, sans-serif;
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --red: #E03030;
-            --red-dark: #C42020;
-            --bg: #0A0A0A;
-            --card: #141414;
-            --border: #222;
-            --text: #FFFFFF;
-            --dim: #888;
-            --muted: #555;
-        }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
-        }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #000; font-family: var(--body); color: var(--white); }
 
-        /* SLIDE */
-        .slide {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 60px;
-            border-bottom: 1px solid var(--border);
-            position: relative;
-        }
-        .slide-inner {
-            max-width: 1100px;
-            width: 100%;
-        }
-        .slide-label {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--red);
-            margin-bottom: 20px;
-        }
-        .slide-title {
-            font-size: clamp(36px, 5vw, 56px);
-            font-weight: 900;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            margin-bottom: 24px;
-        }
-        .slide-title span { color: var(--red); }
-        .slide-text {
-            font-size: 18px;
-            color: var(--dim);
-            line-height: 1.7;
-            max-width: 700px;
-        }
-        .slide-text strong { color: var(--text); font-weight: 600; }
+section.slide {
+  background: var(--bg);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--body);
+}
 
-        /* TITLE SLIDE */
-        .title-slide {
-            text-align: center;
-            flex-direction: column;
-        }
-        .title-slide .slide-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .title-logo {
-            height: 300px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 20px 40px rgba(224, 48, 48, 0.25));
-        }
-        .title-name {
-            font-size: 64px;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 8px;
-        }
-        .title-tagline {
-            font-size: 16px;
-            color: var(--dim);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 48px;
-        }
-        .title-meta {
-            font-size: 13px;
-            color: var(--muted);
-        }
+/* Slide frame: top bar + content + bottom bar */
+.frame-top, .frame-bot {
+  position: absolute;
+  left: 0; right: 0;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 72px;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--muted);
+  text-transform: uppercase;
+  z-index: 10;
+}
+.frame-top { top: 0; border-bottom: 1px solid var(--faint); justify-content: space-between; }
+.frame-bot { bottom: 0; border-top: 1px solid var(--faint); justify-content: space-between; }
+.frame-top .brand { color: var(--white); letter-spacing: 6px; }
+.frame-top .red-dot { width: 8px; height: 8px; border-radius: 100px; background: var(--red); display: inline-block; margin-right: 12px; vertical-align: middle; }
+.slide-num { color: var(--muted); font-variant-numeric: tabular-nums; }
+.slide-num .sep { color: var(--faint); margin: 0 4px; }
+.confidential { color: var(--faint); letter-spacing: 6px; }
 
-        /* TWO COLUMN */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
+/* Utility */
+.h-display { font-family: var(--display); font-weight: 700; line-height: 0.92; letter-spacing: -2px; text-transform: uppercase; }
+.h-eyebrow { font-family: var(--display); font-weight: 500; font-size: 18px; letter-spacing: 6px; color: var(--red); text-transform: uppercase; }
+.h-section-label { font-family: var(--display); font-weight: 500; font-size: 14px; letter-spacing: 6px; color: var(--dim); text-transform: uppercase; }
+.body-lg { font-family: var(--body); font-size: 22px; line-height: 1.45; color: #CCC; font-weight: 400; }
+.body { font-family: var(--body); font-size: 18px; line-height: 1.5; color: #BBB; font-weight: 400; }
+.red { color: var(--red); }
+.dim { color: var(--dim); }
 
-        /* STAT BLOCKS */
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 48px;
-        }
-        .stat-block {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px;
-        }
-        .stat-number {
-            font-size: 42px;
-            font-weight: 900;
-            color: var(--red);
-            letter-spacing: -2px;
-            margin-bottom: 4px;
-        }
-        .stat-desc {
-            font-size: 14px;
-            color: var(--dim);
-            line-height: 1.5;
-        }
+.content {
+  flex: 1;
+  padding: 96px 96px 88px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  align-self: stretch;
+}
 
-        /* BULLET LIST */
-        .bullet-list {
-            list-style: none;
-            margin-top: 32px;
-        }
-        .bullet-list li {
-            font-size: 16px;
-            color: var(--dim);
-            line-height: 1.6;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-        }
-        .bullet-list li:last-child { border-bottom: none; }
-        .bullet-list .dot {
-            width: 8px;
-            height: 8px;
-            min-width: 8px;
-            background: var(--red);
-            border-radius: 50%;
-            margin-top: 6px;
-        }
-        .bullet-list li strong { color: var(--text); }
+/* ─────────── 01 TITLE ─────────── */
+.s01 { background: var(--bg); justify-content: center; align-items: center; }
+.s01 .hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 96px;
+  position: relative;
+}
+.s01 .logo-wrap {
+  position: relative;
+  width: 420px;
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.s01 .logo-glow {
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(circle, rgba(228,48,48,0.35) 0%, rgba(228,48,48,0) 60%);
+  filter: blur(40px);
+}
+.s01 .logo-wrap img { width: 380px; position: relative; }
+.s01 .title-block .brand-top { font-family: var(--display); font-weight: 500; font-size: 20px; letter-spacing: 8px; color: var(--muted); margin-bottom: 32px; }
+.s01 .title-block h1 { font-family: var(--display); font-weight: 700; font-size: 160px; line-height: 0.88; letter-spacing: -4px; }
+.s01 .title-block h1 .t2 { color: var(--red); display: block; }
+.s01 .title-block .tag { font-family: var(--display); font-weight: 500; font-size: 24px; letter-spacing: 8px; color: var(--white); margin-top: 48px; }
+.s01 .title-block .sub { font-family: var(--body); font-size: 18px; color: var(--dim); margin-top: 24px; max-width: 520px; line-height: 1.5; }
+.s01 .meta {
+  position: absolute;
+  left: 96px;
+  bottom: 96px;
+  display: flex;
+  gap: 96px;
+  font-family: var(--display);
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.s01 .meta .l { color: var(--dim); display: block; margin-bottom: 6px; }
+.s01 .meta .v { color: var(--white); font-weight: 500; letter-spacing: 2px; font-size: 16px; }
 
-        /* PHONE FRAMES */
-        .deck-phones {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-        }
-        .deck-phone {
-            width: 180px;
-            border-radius: 24px;
-            overflow: hidden;
-            border: 2px solid var(--border);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
-        }
-        .deck-phone img { width: 100%; display: block; }
+/* ─────────── 02 HOOK ─────────── */
+.s02 .hook-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 40px;
+}
+.s02 .hook-stack { display: grid; grid-template-columns: 440px 1fr; gap: 0 48px; align-items: baseline; }
+.s02 .hook-num { font-family: var(--display); font-weight: 700; font-size: 180px; line-height: 0.9; letter-spacing: -6px; color: var(--white); font-variant-numeric: tabular-nums; }
+.s02 .hook-num.r { color: var(--red); }
+.s02 .hook-label { font-family: var(--display); font-weight: 500; font-size: 26px; letter-spacing: 8px; color: var(--dim); text-transform: uppercase; align-self: center; }
+.s02 .hook-punch {
+  margin-top: 48px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 52px;
+  letter-spacing: -1px;
+  line-height: 1.05;
+  text-transform: uppercase;
+  max-width: 1200px;
+}
+.s02 .hook-punch .red { color: var(--red); }
+.s02 .hook-sub { margin-top: 32px; max-width: 900px; }
 
-        /* COMPETITOR TABLE */
-        .comp-table {
-            width: 100%;
-            margin-top: 40px;
-            border-collapse: collapse;
-        }
-        .comp-table th, .comp-table td {
-            padding: 14px 20px;
-            text-align: left;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border);
-        }
-        .comp-table th {
-            font-weight: 700;
-            font-size: 12px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--dim);
-        }
-        .comp-table td { color: var(--dim); }
-        .comp-table td:first-child { color: var(--text); font-weight: 600; }
-        .comp-table tr.us td {
-            color: var(--text);
-            background: rgba(224, 48, 48, 0.06);
-        }
-        .comp-table tr.us td:first-child { color: var(--red); }
-        .check { color: var(--red); }
-        .x { color: var(--muted); }
+/* ─────────── 03 PROBLEM ─────────── */
+.s03 .problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 96px;
+  flex: 1;
+  align-items: center;
+}
+.s03 h2 { font-family: var(--display); font-weight: 700; font-size: 120px; letter-spacing: -3px; line-height: 0.92; margin-top: 24px; text-transform: uppercase; }
+.s03 h2 .red { color: var(--red); }
+.s03 .lede { margin-top: 40px; max-width: 600px; }
+.s03 .gaps { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--border); }
+.s03 .gap {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+.s03 .gap .n { font-family: var(--display); font-weight: 700; font-size: 48px; color: var(--red); line-height: 1; font-variant-numeric: tabular-nums; }
+.s03 .gap .t { font-family: var(--display); font-weight: 600; font-size: 28px; letter-spacing: 2px; text-transform: uppercase; line-height: 1.1; margin-bottom: 10px; }
+.s03 .gap .d { font-size: 17px; color: var(--dim); line-height: 1.5; }
 
-        /* ROADMAP */
-        .roadmap {
-            margin-top: 40px;
-        }
-        .roadmap-phase {
-            display: flex;
-            gap: 24px;
-            padding: 24px 0;
-            border-bottom: 1px solid var(--border);
-            align-items: baseline;
-        }
-        .roadmap-phase:last-child { border-bottom: none; }
-        .phase-label {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--red);
-            min-width: 80px;
-        }
-        .phase-items {
-            font-size: 15px;
-            color: var(--dim);
-            line-height: 1.6;
-        }
-        .phase-items strong { color: var(--text); }
+/* ─────────── 04 WHY NOW ─────────── */
+.s04 .why-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; flex: 1; align-content: center; }
+.s04 .why-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 48px 40px; display: flex; flex-direction: column; min-height: 420px; }
+.s04 .why-card .n { font-family: var(--display); font-weight: 700; font-size: 128px; line-height: 0.9; color: var(--red); letter-spacing: -4px; font-variant-numeric: tabular-nums; }
+.s04 .why-card .n .unit { color: var(--white); font-size: 56px; font-weight: 500; letter-spacing: 0; margin-left: 4px; }
+.s04 .why-card .t { margin-top: 32px; font-family: var(--display); font-weight: 600; font-size: 24px; letter-spacing: 3px; text-transform: uppercase; line-height: 1.15; }
+.s04 .why-card .d { margin-top: 16px; color: var(--dim); font-size: 16px; line-height: 1.5; flex: 1; }
+.s04 .why-card .src { margin-top: 16px; font-family: var(--display); font-size: 11px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+.s04 h2 { font-family: var(--display); font-weight: 700; font-size: 96px; letter-spacing: -2px; line-height: 0.95; margin-top: 16px; margin-bottom: 16px; text-transform: uppercase; max-width: 1200px; }
+.s04 h2 .red { color: var(--red); }
 
-        /* FINAL CTA */
-        .final-slide {
-            text-align: center;
-        }
-        .final-slide .slide-inner {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .contact-grid {
-            display: flex;
-            gap: 40px;
-            margin-top: 48px;
-        }
-        .contact-item {
-            text-align: center;
-        }
-        .contact-label {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 8px;
-        }
-        .contact-value {
-            font-size: 16px;
-            font-weight: 600;
-        }
-        .contact-value a {
-            color: var(--red);
-            text-decoration: none;
-        }
+/* ─────────── 05 INSIGHT ─────────── */
+.s05 { padding: 0 !important; }
+.s05 .ins-wrap { flex: 1; display: grid; grid-template-columns: 1fr 1fr; align-items: center; padding: 120px 96px; gap: 96px; }
+.s05 .ins-txt h2 { font-family: var(--display); font-weight: 700; font-size: 112px; letter-spacing: -3px; line-height: 0.92; margin: 20px 0 40px; text-transform: uppercase; }
+.s05 .ins-txt h2 .red { color: var(--red); }
+.s05 .ins-txt .body-lg { max-width: 560px; }
+.s05 .ins-txt .pullquote { margin-top: 48px; padding: 32px; border-left: 4px solid var(--red); background: var(--surface); font-family: var(--display); font-weight: 500; font-size: 28px; letter-spacing: 1px; line-height: 1.25; text-transform: uppercase; max-width: 560px; }
+.s05 .ins-diag {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.s05 .ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+}
+.s05 .r1 { inset: 0; }
+.s05 .r2 { inset: 80px; border-color: #2A2A2A; }
+.s05 .r3 { inset: 160px; border-color: #333; }
+.s05 .core {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display); font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 0.95;
+  letter-spacing: 1px;
+  font-size: 22px;
+  box-shadow: 0 0 80px rgba(228,48,48,0.6);
+}
+.s05 .orbit {
+  position: absolute;
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.s05 .orbit .icn { color: var(--red); margin-right: 8px; }
+.s05 .o1 { top: 8%; left: 50%; transform: translateX(-50%); }
+.s05 .o2 { top: 50%; right: 0; transform: translateY(-50%); }
+.s05 .o3 { bottom: 8%; left: 50%; transform: translateX(-50%); }
+.s05 .o4 { top: 50%; left: 0; transform: translateY(-50%); }
 
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .slide { padding: 60px 24px; }
-            .two-col { grid-template-columns: 1fr; gap: 40px; }
-            .deck-phones { flex-wrap: wrap; }
-            .deck-phone { width: 140px; }
-            .title-logo { height: 200px; }
-            .title-name { font-size: 40px; }
-            .stat-grid { grid-template-columns: 1fr 1fr; }
-            .contact-grid { flex-direction: column; gap: 24px; }
-            .comp-table { font-size: 12px; }
-            .comp-table th, .comp-table td { padding: 10px 12px; }
-        }
+/* ─────────── 06 PRODUCT ─────────── */
+.s06 .prod-wrap { flex: 1; display: flex; flex-direction: column; }
+.s06 .phone-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; flex: 1; align-items: center; margin-top: 40px; }
+.s06 .phone-col { display: flex; flex-direction: column; align-items: center; }
+.s06 .phone {
+  width: 100%;
+  aspect-ratio: 9/19.5;
+  background: #000;
+  border: 2px solid #222;
+  border-radius: 28px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 6px #0E0E0E;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.s06 .phone img { width: 100%; height: 100%; object-fit: cover; }
+.s06 .phone-label { font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: 3px; text-transform: uppercase; text-align: center; }
+.s06 .phone-sub { font-family: var(--body); font-size: 13px; color: var(--dim); margin-top: 4px; text-align: center; max-width: 220px; line-height: 1.4; }
 
-        @media print {
-            .slide { min-height: auto; padding: 40px; page-break-after: always; }
-            body { background: white; color: #111; }
-            .stat-block, .comp-table td, .comp-table th { border-color: #ddd; }
-        }
-    </style>
+/* ─────────── 07 MODES ─────────── */
+.s07 .modes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; flex: 1; margin-top: 40px; }
+.s07 .mode { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 48px 40px; display: flex; flex-direction: column; }
+.s07 .mode .code { font-family: var(--display); font-weight: 500; font-size: 14px; letter-spacing: 4px; color: var(--red); text-transform: uppercase; }
+.s07 .mode .name { margin-top: 20px; font-family: var(--display); font-weight: 700; font-size: 56px; letter-spacing: -1px; line-height: 0.95; text-transform: uppercase; }
+.s07 .mode .name .red { color: var(--red); }
+.s07 .mode .tag { margin-top: 16px; font-family: var(--body); font-style: italic; font-size: 17px; color: #AAA; }
+.s07 .mode .desc { margin-top: 24px; font-size: 16px; color: var(--dim); line-height: 1.5; flex: 1; }
+.s07 .mode .stats { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; gap: 32px; }
+.s07 .mode .stats .k { font-family: var(--display); font-weight: 500; font-size: 11px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+.s07 .mode .stats .v { font-family: var(--display); font-weight: 700; font-size: 36px; color: var(--white); line-height: 1; margin-top: 4px; }
+
+/* ─────────── 08 MANIFESTO / DIFFERENTIATION ─────────── */
+.s08 .man-head { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: end; margin-bottom: 40px; }
+.s08 h2 { font-family: var(--display); font-weight: 700; font-size: 100px; letter-spacing: -3px; line-height: 0.92; text-transform: uppercase; margin-top: 16px; }
+.s08 h2 .red { color: var(--red); }
+.s08 .beats { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 64px; flex: 1; align-content: center; }
+.s08 .beat { display: grid; grid-template-columns: auto 1fr; gap: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.s08 .beat .nope { font-family: var(--display); font-weight: 700; font-size: 18px; color: var(--red); text-decoration: line-through; text-decoration-thickness: 2px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; min-width: 160px; }
+.s08 .beat .yep { font-family: var(--display); font-weight: 600; font-size: 22px; letter-spacing: 1px; text-transform: uppercase; line-height: 1.15; }
+.s08 .beat .d { grid-column: 2; font-size: 15px; color: var(--dim); margin-top: 8px; line-height: 1.5; }
+
+/* ─────────── 09 MARKET ─────────── */
+.s09 .mkt-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; flex: 1; align-items: center; }
+.s09 h2 { font-family: var(--display); font-weight: 700; font-size: 108px; letter-spacing: -3px; line-height: 0.92; text-transform: uppercase; margin-top: 16px; }
+.s09 .lede { margin-top: 40px; max-width: 560px; }
+.s09 .tam-stack { display: flex; flex-direction: column; gap: 16px; }
+.s09 .tam-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; display: grid; grid-template-columns: 80px 1fr auto; gap: 24px; align-items: center; }
+.s09 .tam-box.tam { border-color: var(--red); background: rgba(228,48,48,0.06); }
+.s09 .tam-box .tag { font-family: var(--display); font-weight: 700; font-size: 20px; letter-spacing: 3px; color: var(--red); }
+.s09 .tam-box .desc .k { font-family: var(--display); font-weight: 500; font-size: 13px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; }
+.s09 .tam-box .desc .t { font-family: var(--body); font-size: 15px; color: #CCC; margin-top: 4px; line-height: 1.4; }
+.s09 .tam-box .num { font-family: var(--display); font-weight: 700; font-size: 44px; color: var(--white); letter-spacing: -1px; line-height: 1; font-variant-numeric: tabular-nums; text-align: right; }
+.s09 .tam-box .num .unit { font-size: 20px; color: var(--dim); font-weight: 500; display: block; letter-spacing: 3px; margin-top: 6px; }
+
+/* ─────────── 10 TRACTION ─────────── */
+.s10 .trac-top { display: grid; grid-template-columns: 2fr 1fr; gap: 72px; align-items: end; margin-bottom: 48px; }
+.s10 h2 { font-family: var(--display); font-weight: 700; font-size: 104px; letter-spacing: -3px; line-height: 0.92; text-transform: uppercase; margin-top: 16px; }
+.s10 h2 .red { color: var(--red); }
+.s10 .live-badge { display: inline-flex; align-items: center; gap: 12px; background: rgba(228,48,48,0.1); border: 1px solid rgba(228,48,48,0.4); border-radius: 100px; padding: 10px 20px; font-family: var(--display); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--red); }
+.s10 .live-badge .dot { width: 8px; height: 8px; border-radius: 100px; background: var(--red); animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.s10 .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.s10 .metric { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 36px 32px; }
+.s10 .metric .k { font-family: var(--display); font-weight: 500; font-size: 13px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; }
+.s10 .metric .v { margin-top: 16px; font-family: var(--display); font-weight: 700; font-size: 72px; line-height: 0.95; letter-spacing: -2px; }
+.s10 .metric .v .unit { font-size: 28px; color: var(--dim); font-weight: 500; letter-spacing: 2px; }
+.s10 .metric .red { color: var(--red); }
+.s10 .metric .sub { margin-top: 12px; font-size: 14px; color: var(--muted); line-height: 1.4; }
+.s10 .roadmap { margin-top: 48px; padding-top: 40px; border-top: 1px solid var(--border); display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.s10 .rm-col .rm-q { font-family: var(--display); font-weight: 500; font-size: 12px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
+.s10 .rm-col.now .rm-q { color: var(--red); }
+.s10 .rm-col .rm-t { margin-top: 10px; font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: 1.5px; text-transform: uppercase; line-height: 1.25; }
+.s10 .rm-col .rm-d { margin-top: 8px; font-size: 13px; color: var(--dim); line-height: 1.45; }
+
+/* ─────────── 11 BUSINESS MODEL ─────────── */
+.s11 .biz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; margin-top: 28px; min-height: 0; }
+.s11 .tier { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 36px 40px; display: flex; flex-direction: column; min-height: 0; }
+.s11 .tier.pro { border-color: var(--red); background: linear-gradient(160deg, rgba(228,48,48,0.08), transparent); }
+.s11 .tier .type { font-family: var(--display); font-weight: 500; font-size: 14px; letter-spacing: 4px; color: var(--dim); text-transform: uppercase; }
+.s11 .tier.pro .type { color: var(--red); }
+.s11 .tier .price { margin-top: 16px; display: baseline; font-family: var(--display); font-weight: 700; }
+.s11 .tier .price .n { font-size: 76px; letter-spacing: -2px; line-height: 0.9; }
+.s11 .tier .price .u { font-size: 20px; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; margin-left: 12px; font-weight: 500; }
+.s11 .tier.pro .price .n { color: var(--red); }
+.s11 .tier .name { margin-top: 12px; font-family: var(--display); font-weight: 700; font-size: 42px; letter-spacing: -1px; text-transform: uppercase; }
+.s11 .tier .tag { margin-top: 16px; font-family: var(--body); color: #BBB; font-size: 17px; line-height: 1.5; font-style: italic; }
+.s11 .tier .list { margin-top: 20px; display: flex; flex-direction: column; gap: 0; }
+.s11 .tier .item { display: grid; grid-template-columns: 20px 1fr; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 16px; color: #DDD; }
+.s11 .tier .item:last-child { border-bottom: 0; }
+.s11 .tier .check { color: var(--red); font-weight: 700; }
+.s11 .tier .econ { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.s11 .tier .econ .k { font-family: var(--display); font-size: 11px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+.s11 .tier .econ .v { font-family: var(--display); font-weight: 700; font-size: 24px; margin-top: 4px; color: var(--white); letter-spacing: -0.5px; }
+
+/* ─────────── 12 COMPETITIVE ─────────── */
+.s12 .comp-wrap { flex: 1; display: flex; flex-direction: column; margin-top: 32px; }
+.s12 .axis-plot {
+  flex: 1;
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  min-height: 620px;
+}
+.s12 .axis { position: absolute; background: var(--border-hi); }
+.s12 .ax-h { left: 40px; right: 40px; top: 50%; height: 1px; }
+.s12 .ax-v { top: 40px; bottom: 40px; left: 50%; width: 1px; }
+.s12 .al-top, .s12 .al-bot, .s12 .al-l, .s12 .al-r { position: absolute; font-family: var(--display); font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); }
+.s12 .al-top { top: 16px; left: 50%; transform: translateX(-50%); }
+.s12 .al-bot { bottom: 16px; left: 50%; transform: translateX(-50%); }
+.s12 .al-l { left: 24px; top: 50%; transform: translateY(-50%) rotate(-90deg); transform-origin: 0 50%; white-space: nowrap; }
+.s12 .al-r { right: 24px; top: 50%; transform: translateY(-50%) rotate(90deg); transform-origin: 100% 50%; white-space: nowrap; }
+.s12 .dot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: var(--bg);
+  border: 1px solid var(--border-hi);
+  color: #BBB;
+  white-space: nowrap;
+}
+.s12 .dot.us { background: var(--red); border-color: var(--red); color: var(--white); box-shadow: 0 0 40px rgba(228,48,48,0.6); font-size: 16px; padding: 12px 24px; }
+.s12 .comp-sum { margin-top: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.s12 .sum-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; background: var(--surface); }
+.s12 .sum-card.us { border-color: var(--red); background: rgba(228,48,48,0.06); }
+.s12 .sum-card .k { font-family: var(--display); font-size: 12px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+.s12 .sum-card.us .k { color: var(--red); }
+.s12 .sum-card .v { margin-top: 8px; font-family: var(--display); font-weight: 600; font-size: 18px; letter-spacing: 1px; line-height: 1.3; text-transform: uppercase; }
+.s12 h2 { font-family: var(--display); font-weight: 700; font-size: 96px; letter-spacing: -2px; line-height: 0.92; text-transform: uppercase; margin-top: 16px; }
+.s12 h2 .red { color: var(--red); }
+
+/* ─────────── 13 TEAM ─────────── */
+.s13 .team-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 96px; flex: 1; align-items: center; }
+.s13 h2 { font-family: var(--display); font-weight: 700; font-size: 96px; letter-spacing: -2px; line-height: 0.92; text-transform: uppercase; margin-top: 16px; }
+.s13 .founder-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 0;
+  overflow: hidden;
+}
+.s13 .founder-pic {
+  height: 280px;
+  background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+.s13 .founder-pic .avatar { width: 160px; height: 160px; border-radius: 100px; background: var(--surface-hi); border: 2px solid var(--border-hi); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-weight: 700; font-size: 64px; color: var(--red); }
+.s13 .founder-body { padding: 32px 40px 40px; }
+.s13 .founder-body .name { font-family: var(--display); font-weight: 700; font-size: 44px; letter-spacing: -1px; text-transform: uppercase; }
+.s13 .founder-body .role { font-family: var(--display); font-weight: 500; font-size: 14px; letter-spacing: 4px; color: var(--red); text-transform: uppercase; margin-top: 6px; }
+.s13 .founder-body .bio { margin-top: 20px; font-size: 15px; color: #CCC; line-height: 1.55; }
+.s13 .founder-body .cred { margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+.s13 .founder-body .cred-row { display: grid; grid-template-columns: 14px 1fr; gap: 12px; font-size: 14px; color: var(--dim); align-items: baseline; }
+.s13 .founder-body .cred-row .b { color: var(--red); }
+.s13 .team-prose .lede { max-width: 620px; margin-top: 32px; }
+.s13 .team-prose h3 { margin-top: 40px; font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: 4px; text-transform: uppercase; color: var(--dim); }
+.s13 .team-prose .why { margin-top: 16px; font-family: var(--body); font-size: 18px; color: #CCC; line-height: 1.6; max-width: 620px; }
+.s13 .team-prose .pull { margin-top: 32px; padding-left: 24px; border-left: 4px solid var(--red); font-family: var(--display); font-weight: 600; font-size: 28px; line-height: 1.2; text-transform: uppercase; letter-spacing: 0.5px; max-width: 520px; }
+
+/* ─────────── 14 THE ASK ─────────── */
+.s14 { background: var(--bg); position: relative; }
+.s14::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1000px 700px at 85% 50%, rgba(228,48,48,0.18), transparent 60%),
+    radial-gradient(600px 400px at 10% 20%, rgba(228,48,48,0.08), transparent 60%);
+  pointer-events: none;
+}
+.s14 .ask-wrap { flex: 1; display: grid; grid-template-columns: 1.4fr 1fr; gap: 96px; align-items: center; position: relative; z-index: 2; }
+.s14 h2 { font-family: var(--display); font-weight: 700; font-size: 180px; letter-spacing: -5px; line-height: 0.88; text-transform: uppercase; margin-top: 16px; }
+.s14 h2 .red { color: var(--red); }
+.s14 .ask-sub { margin-top: 40px; font-size: 22px; color: #CCC; line-height: 1.5; max-width: 640px; }
+.s14 .ask-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 48px 44px; }
+.s14 .ask-panel .raise-k { font-family: var(--display); font-weight: 500; font-size: 14px; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
+.s14 .ask-panel .raise-v { margin-top: 8px; font-family: var(--display); font-weight: 700; font-size: 88px; line-height: 0.95; letter-spacing: -2px; color: var(--red); }
+.s14 .ask-panel .raise-v .u { font-size: 32px; color: var(--dim); letter-spacing: 2px; text-transform: uppercase; font-weight: 500; margin-left: 8px; }
+.s14 .ask-panel .rn { margin-top: 4px; font-family: var(--body); font-size: 15px; color: var(--dim); }
+.s14 .ask-panel .alloc { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
+.s14 .ask-panel .row { display: grid; grid-template-columns: 60px 1fr auto; gap: 16px; align-items: baseline; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.s14 .ask-panel .row:last-child { border-bottom: 0; }
+.s14 .ask-panel .row .p { font-family: var(--display); font-weight: 700; font-size: 22px; color: var(--red); }
+.s14 .ask-panel .row .l { font-family: var(--display); font-weight: 600; font-size: 15px; letter-spacing: 2px; text-transform: uppercase; }
+.s14 .ask-panel .row .l .d { font-family: var(--body); font-weight: 400; font-size: 13px; color: var(--dim); letter-spacing: 0; text-transform: none; margin-top: 4px; }
+.s14 .ask-panel .row .r { font-family: var(--display); font-size: 13px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; text-align: right; }
+
+.s14 .vision { margin-top: 40px; max-width: 720px; }
+.s14 .vision .label { font-family: var(--display); font-weight: 500; font-size: 14px; letter-spacing: 6px; color: var(--red); text-transform: uppercase; }
+.s14 .vision .line { margin-top: 16px; font-family: var(--display); font-weight: 700; font-size: 48px; letter-spacing: -1px; line-height: 1.05; text-transform: uppercase; }
+.s14 .contact { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; gap: 48px; }
+.s14 .contact .c-k { font-family: var(--display); font-size: 11px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+.s14 .contact .c-v { margin-top: 6px; font-family: var(--body); font-size: 15px; color: var(--white); font-weight: 500; }
+
+</style>
 </head>
 <body>
 
-    <!-- SLIDE 1: TITLE -->
-    <section class="slide title-slide">
-        <div class="slide-inner">
-            <img src="images/logo.png" alt="Bag Buddy" class="title-logo">
-            <div class="title-name">Bag Buddy</div>
-            <div class="title-tagline">Train Like You Fight.</div>
-            <div class="slide-text" style="margin-bottom: 48px;">
-                The hands-free heavy bag training app for boxers and Muay Thai fighters.
-                Spoken combo callouts, coach audio, full round timing, Apple Health integration.
-            </div>
-            <div class="title-meta">Investor Overview &mdash; April 2026</div>
-        </div>
-    </section>
+<script type="application/json" id="speaker-notes">
+[]
+</script>
 
-    <!-- SLIDE 2: PROBLEM -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">The Problem</div>
-            <div class="slide-title">The Heavy Bag Is the Most Popular <span>Training Tool</span> in Combat Sports. It Has Zero Tech Support.</div>
-            <div class="slide-text">
-                Millions of people train on heavy bags every day &mdash; in gyms, garages, and basements.
-                But there's no coach standing next to them calling combinations. They end up throwing
-                the same 3 punches on repeat, get bored, and quit.
-                <br><br>
-                <strong>Existing timer apps just count down rounds.</strong> They don't tell you what to throw,
-                when to move, or how to train with purpose. They're glorified stopwatches.
-            </div>
-        </div>
-    </section>
+<deck-stage width="1920" height="1080">
 
-    <!-- SLIDE 3: SOLUTION -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="two-col">
-                <div>
-                    <div class="slide-label">The Solution</div>
-                    <div class="slide-title">A Coach in <span>Your Pocket.</span></div>
-                    <div class="slide-text">
-                        Bag Buddy calls out combinations out loud &mdash; hands-free, eyes up, 100% focused on the bag.
-                        No staring at your phone. No guessing what to throw next. Just work.
-                        <br><br>
-                        <strong>Boxing and Muay Thai.</strong> Three training modes. 149 combinations.
-                        Coach audio drops between combos. Warning bells, round timing,
-                        and Apple Health tracking &mdash; all built in.
-                    </div>
-                </div>
-                <div class="deck-phones">
-                    <div class="deck-phone"><img src="images/home.png" alt="Home"></div>
-                    <div class="deck-phone"><img src="images/session.png" alt="Session"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- ═══════════════════ 01 TITLE ═══════════════════ -->
+<section class="slide s01" data-label="Title">
+  <div class="frame-top">
+    <div class="brand"><span class="red-dot"></span>BAG BUDDY</div>
+    <div class="slide-num">01<span class="sep">/</span>14</div>
+  </div>
 
-    <!-- SLIDE 4: TRAINING MODES -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">Training Modes</div>
-            <div class="slide-title">Three Ways to <span>Work.</span></div>
-            <div class="slide-text">Boxing and Muay Thai. Pick your discipline, pick your mode, and go.</div>
-            <div class="modes-grid" style="margin-top: 48px; gap: 48px;">
-                <div class="mode-card" style="text-align: left; padding: 48px 32px; border-color: #333; background: #161616;">
-                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;"><circle cx="12" cy="4" r="2"/><path d="M6 21l2-7 3 2 3-2 2 7"/><path d="M8 14l-2-3 3-3h6l3 3-2 3"/><path d="M16 8l3-1"/></svg>
-                    <h3>Stand and Bang</h3>
-                    <div style="font-size: 12px; font-weight: 600; letter-spacing: 2px; color: var(--red); margin-bottom: 12px;">PURE OFFENSE.</div>
-                    <p>Back-to-back strike combinations called out loud. No defense &mdash; just commit to every punch and keep moving forward.</p>
-                </div>
-                <div class="mode-card" style="text-align: left; padding: 48px 32px; border-color: #333; background: #161616;">
-                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;"><path d="M12 3L4 8v8l8 5 8-5V8l-8-5z"/><path d="M12 3v18"/><path d="M4 8l8 5 8-5"/></svg>
-                    <h3>Stick and Move</h3>
-                    <div style="font-size: 12px; font-weight: 600; letter-spacing: 2px; color: var(--red); margin-bottom: 12px;">HIT AND DON'T GET HIT.</div>
-                    <p>Every combo includes a defensive move &mdash; a slip, roll, or cover. Strike and move like a smart fighter.</p>
-                </div>
-                <div class="mode-card" style="text-align: left; padding: 48px 32px; border-color: #333; background: #161616;">
-                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-                    <h3>Drillers Make Killers</h3>
-                    <div style="font-size: 12px; font-weight: 600; letter-spacing: 2px; color: var(--red); margin-bottom: 12px;">ONE COMBO. PERFECT IT.</div>
-                    <p>A single complex combination drilled for 60 seconds until it's muscle memory. Repetition builds skill that holds up under pressure.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="content" style="padding: 0; flex: 1; justify-content: center; align-items: center;">
+    <div class="hero">
+      <div class="logo-wrap">
+        <div class="logo-glow"></div>
+        <img src="images/logo.png" alt="Bag Buddy mascot">
+      </div>
+      <div class="title-block">
+        <div class="brand-top">INVESTOR BRIEFING · 2026</div>
+        <h1>BAG<span class="t2">BUDDY</span></h1>
+        <div class="tag">BEEN HIT. STILL GRINNING.</div>
+        <div class="sub">The hands-free heavy-bag coach. Built by a fighter, for fighters. Live on the App Store.</div>
+      </div>
+    </div>
+  </div>
 
-    <!-- SLIDE 5: ADDITIONAL FEATURES -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">Features</div>
-            <div class="slide-title">More Than a <span>Timer.</span></div>
-            <div class="slide-text">Everything you need to train with purpose. Nothing you don't.</div>
-            <div class="features-grid" style="margin-top: 48px;">
-                <div class="feature-card">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-                    <h3>Coach Audio Drops</h3>
-                    <p>Random motivational cues between combos. "Hands up." "Stay busy." "Push through." Like having a trainer in the room.</p>
-                </div>
-                <div class="feature-card">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                    <h3>Music Integration</h3>
-                    <p>Spotify and Apple Music play through the session. Callouts duck the music automatically, then restore it between combos.</p>
-                </div>
-                <div class="feature-card">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                    <h3>Apple Health & WHOOP</h3>
-                    <p>Every session logged as a boxing workout with estimated calories. Syncs to WHOOP automatically via Apple Health.</p>
-                </div>
-                <div class="feature-card">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                    <h3>Streaks & History</h3>
-                    <p>Full session history with daily training streak tracking. Your coach checks in every day at 5 PM to keep you accountable.</p>
-                </div>
-                <div class="feature-card">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    <h3>Full Round Timer</h3>
-                    <p>1-12 rounds, 30 seconds to 10 minutes each. Configurable rest, warning bell, and three pacing speeds.</p>
-                </div>
-                <div class="feature-card">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E03030" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 24px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/><path d="M2 8h2M20 8h2M2 12h2M20 12h2M2 16h2M20 16h2"/></svg>
-                    <h3>Haptic Feedback</h3>
-                    <p>Feel the round start, warning bell, and round end through vibration. Train with AirPods and never miss a cue.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="meta">
+    <div><span class="l">PREPARED FOR</span><span class="v">SEED INVESTORS</span></div>
+    <div><span class="l">STAGE</span><span class="v">PRE-SEED · LIVE PRODUCT</span></div>
+    <div><span class="l">RAISING</span><span class="v">$750K SAFE</span></div>
+  </div>
 
-    <!-- SLIDE 5: MARKET -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">Market Opportunity</div>
-            <div class="slide-title">Combat Sports Fitness Is <span>Exploding.</span></div>
-            <div class="slide-text">
-                Boxing and kickboxing are the fastest-growing segments of the fitness industry.
-                The at-home boxing market alone is projected to reach <strong>$2.1B by 2028</strong>.
-                Heavy bags are the #1 selling piece of combat sports equipment globally.
-            </div>
-            <div class="stat-grid">
-                <div class="stat-block">
-                    <div class="stat-number">$2.1B</div>
-                    <div class="stat-desc">At-home boxing market projected by 2028</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-number">36M</div>
-                    <div class="stat-desc">Americans who box or do kickboxing for fitness</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-number">#1</div>
-                    <div class="stat-desc">Heavy bags are the top-selling combat sports equipment</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-number">78%</div>
-                    <div class="stat-desc">Of heavy bag owners train at home without a coach</div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="frame-bot">
+    <div class="confidential">CONFIDENTIAL</div>
+    <div class="slide-num">BAG BUDDY · 2026</div>
+  </div>
+</section>
 
-    <!-- SLIDE 6: COMPETITIVE LANDSCAPE -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">Competitive Landscape</div>
-            <div class="slide-title">Timer Apps Exist. <span>Coaches Don't.</span></div>
-            <div class="slide-text">
-                Every boxing app on the market is either a round timer with no intelligence,
-                or a video-follow-along that requires watching your screen. Nobody is calling
-                combinations out loud, hands-free, while you work the bag.
-            </div>
-            <table class="comp-table">
-                <thead>
-                    <tr>
-                        <th>App</th>
-                        <th>Audio Combos</th>
-                        <th>Muay Thai</th>
-                        <th>Coach Cues</th>
-                        <th>Music Duck</th>
-                        <th>Free</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="us">
-                        <td>Bag Buddy</td>
-                        <td class="check">&#10003;</td>
-                        <td class="check">&#10003;</td>
-                        <td class="check">&#10003;</td>
-                        <td class="check">&#10003;</td>
-                        <td class="check">&#10003;</td>
-                    </tr>
-                    <tr>
-                        <td>Boxing Timer Apps</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="check">&#10003;</td>
-                    </tr>
-                    <tr>
-                        <td>FightCamp</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="check">&#10003;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                    </tr>
-                    <tr>
-                        <td>Boxtastic</td>
-                        <td class="check">&#10003;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                    </tr>
-                    <tr>
-                        <td>Shadow Boxing App</td>
-                        <td class="check">&#10003;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                        <td class="x">&#10005;</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+<!-- ═══════════════════ 02 HOOK ═══════════════════ -->
+<section class="slide s02" data-label="The Hook">
+  <div class="frame-top">
+    <div class="brand"><span class="red-dot"></span>THE HOOK</div>
+    <div class="slide-num">02<span class="sep">/</span>14</div>
+  </div>
 
-    <!-- SLIDE 7: BUSINESS MODEL -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">Business Model</div>
-            <div class="slide-title">Free to Fight. <span>Pay to Train.</span></div>
-            <div class="slide-text">
-                V1 launches free to build user base and organic traction.
-                V2 introduces a premium tier with advanced features that serious fighters will pay for.
-            </div>
-            <div class="stat-grid">
-                <div class="stat-block">
-                    <div style="font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--dim); margin-bottom: 16px;">FREE TIER (V1)</div>
-                    <ul class="bullet-list" style="margin-top: 0;">
-                        <li><div class="dot"></div><div>Boxing & Muay Thai combos</div></li>
-                        <li><div class="dot"></div><div>3 training modes</div></li>
-                        <li><div class="dot"></div><div>Full round timer</div></li>
-                        <li><div class="dot"></div><div>Apple Health integration</div></li>
-                        <li><div class="dot"></div><div>Session history & streaks</div></li>
-                    </ul>
-                </div>
-                <div class="stat-block">
-                    <div style="font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--red); margin-bottom: 16px;">PREMIUM TIER (V2)</div>
-                    <ul class="bullet-list" style="margin-top: 0;">
-                        <li><div class="dot"></div><div>Custom workout presets</div></li>
-                        <li><div class="dot"></div><div>Combo blocking & favorites</div></li>
-                        <li><div class="dot"></div><div>Performance analytics & charts</div></li>
-                        <li><div class="dot"></div><div>Apple Watch companion</div></li>
-                        <li><div class="dot"></div><div>Fighter combo packs (see below)</div></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="content hook-stage">
+    <div class="h-eyebrow">WHAT WE'VE BUILT</div>
 
-    <!-- SLIDE 8: FIGHTER PACKS -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">Revenue Unlock</div>
-            <div class="slide-title">Train Like a <span>Champion.</span></div>
-            <div class="slide-text">
-                Partner with professional fighters and celebrity boxing coaches to release
-                <strong>signature combo packs</strong> &mdash; curated sets of their go-to combinations,
-                recorded in their voice, available as premium in-app purchases.
-            </div>
-            <ul class="bullet-list">
-                <li>
-                    <div class="dot"></div>
-                    <div><strong>Fighter Signature Packs</strong> &mdash; A champion's favorite combinations to success. Their combos, their voice, their coaching style. Users train the way the pros actually fight.</div>
-                </li>
-                <li>
-                    <div class="dot"></div>
-                    <div><strong>Coach Collections</strong> &mdash; Legendary trainers curate combination sets for specific skills: inside fighting, counter punching, pressure fighting, southpaw offense.</div>
-                </li>
-                <li>
-                    <div class="dot"></div>
-                    <div><strong>Revenue Share Model</strong> &mdash; Fighters and coaches earn a percentage of every pack sold. Their name drives downloads, the app delivers the training experience.</div>
-                </li>
-                <li>
-                    <div class="dot"></div>
-                    <div><strong>Scalable Content Pipeline</strong> &mdash; Each pack is a set of audio files and combo data &mdash; low production cost, high perceived value. New packs ship without app updates.</div>
-                </li>
-            </ul>
-            <div class="stat-grid" style="margin-top: 40px;">
-                <div class="stat-block">
-                    <div class="stat-number">$4.99</div>
-                    <div class="stat-desc">Target price per fighter pack &mdash; impulse buy for fans</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-number">&#8734;</div>
-                    <div class="stat-desc">Roster scales with every new partnership signed</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-number">2x</div>
-                    <div class="stat-desc">Each fighter brings their own audience to the app</div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="hook-stack" style="margin-top: 32px;">
+      <div class="hook-num r">149</div>
+      <div class="hook-label">COMBINATIONS</div>
+      <div class="hook-num">3</div>
+      <div class="hook-label">TRAINING MODES</div>
+      <div class="hook-num">$0</div>
+      <div class="hook-label">PRICE. FOREVER.</div>
+    </div>
 
-    <!-- SLIDE 9: ROADMAP -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">Roadmap</div>
-            <div class="slide-title">What's <span>Next.</span></div>
-            <div class="roadmap">
-                <div class="roadmap-phase">
-                    <div class="phase-label">Q2 2026</div>
-                    <div class="phase-items">
-                        <strong>V1 Launch</strong> &mdash; Free on App Store. Boxing + Muay Thai. 149 combinations. Coach audio. Apple Health. Organic growth via word of mouth and social.
-                    </div>
-                </div>
-                <div class="roadmap-phase">
-                    <div class="phase-label">Q3 2026</div>
-                    <div class="phase-items">
-                        <strong>V1.5 Polish</strong> &mdash; Workout presets, combo favorites/blocking, history charts, iCloud sync. Community feedback integration.
-                    </div>
-                </div>
-                <div class="roadmap-phase">
-                    <div class="phase-label">Q4 2026</div>
-                    <div class="phase-items">
-                        <strong>V2 Premium</strong> &mdash; Subscription tier. Apple Watch companion app. Performance analytics. Advanced coach features. Additional martial arts disciplines.
-                    </div>
-                </div>
-                <div class="roadmap-phase">
-                    <div class="phase-label">2027</div>
-                    <div class="phase-items">
-                        <strong>Platform Expansion</strong> &mdash; Android launch. Gym/trainer partnerships. Branded content collaborations. Social sharing and leaderboards.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="hook-punch">
+      A coach in your ear <span class="red">that never</span> gets tired of <span class="red">watching you work.</span>
+    </div>
+  </div>
 
-    <!-- SLIDE 9: TRACTION -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">Traction</div>
-            <div class="slide-title">Day One <span>Ready.</span></div>
-            <div class="slide-text">
-                Bag Buddy is live on the App Store today. Built from scratch, shipped in weeks,
-                not months. Every audio callout recorded by the founder. Every feature battle-tested
-                on a real heavy bag.
-            </div>
-            <div class="stat-grid">
-                <div class="stat-block">
-                    <div class="stat-number">149</div>
-                    <div class="stat-desc">Unique combinations across boxing and Muay Thai</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-number">108</div>
-                    <div class="stat-desc">Hand-recorded audio callouts by the founder</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-number">Live</div>
-                    <div class="stat-desc">On the App Store as of April 2026</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-number">$0</div>
-                    <div class="stat-desc">External funding to date &mdash; fully bootstrapped</div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="frame-bot">
+    <div class="confidential">CONFIDENTIAL</div>
+    <div class="slide-num">BAG BUDDY · 2026</div>
+  </div>
+</section>
 
-    <!-- SLIDE 10: TEAM -->
-    <section class="slide">
-        <div class="slide-inner">
-            <div class="slide-label">Team</div>
-            <div class="slide-title">Built by a <span>Fighter.</span></div>
-            <div class="slide-text">
-                <strong>Rafe Tangorra</strong> &mdash; Founder & Developer
-                <br><br>
-                Fighter, builder, and the voice behind every callout in the app.
-                Rafe built Bag Buddy because he needed it &mdash; a real training tool
-                for the heavy bag, not another timer with a boxing glove icon.
-                <br><br>
-                Every combination in the app is fight-tested. Every audio file is his voice.
-                Every feature exists because it made the training better.
-            </div>
-        </div>
-    </section>
+<!-- ═══════════════════ 03 PROBLEM ═══════════════════ -->
+<section class="slide s03" data-label="The Problem">
+  <div class="frame-top">
+    <div class="brand"><span class="red-dot"></span>THE PROBLEM</div>
+    <div class="slide-num">03<span class="sep">/</span>14</div>
+  </div>
 
-    <!-- SLIDE 11: CLOSING -->
-    <section class="slide final-slide">
-        <div class="slide-inner">
-            <img src="images/logo.png" alt="Bag Buddy" style="height: 160px; margin-bottom: 32px; filter: drop-shadow(0 20px 40px rgba(224, 48, 48, 0.25));">
-            <div class="slide-title">Let's <span>Talk.</span></div>
-            <div class="slide-text" style="text-align: center; margin: 0 auto 48px;">
-                Bag Buddy is live, free, and growing. We're looking for partners who
-                understand that the best products are built by people who use them.
-            </div>
-            <div class="contact-grid">
-                <div class="contact-item">
-                    <div class="contact-label">App Store</div>
-                    <div class="contact-value"><a href="https://apps.apple.com/us/app/the-bag-buddy/id6762319334">Download Bag Buddy</a></div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-label">Website</div>
-                    <div class="contact-value"><a href="https://rafetangorra-tech.github.io/BagBuddy/">bagbuddy</a></div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-label">Email</div>
-                    <div class="contact-value"><a href="mailto:rafe@bagbuddyapp.com">rafe@bagbuddyapp.com</a></div>
-                </div>
-            </div>
+  <div class="content">
+    <div class="problem-grid">
+      <div>
+        <div class="h-eyebrow">THE PROBLEM</div>
+        <h2>THE HEAVY BAG<br>HASN'T HAD A <span class="red">COACH.</span></h2>
+        <p class="lede body-lg">Most fighters train alone. The bag is patient. It will let you stand there doing the same lazy 1-2 for an hour. Nobody calls combos. Nobody runs your round clock. Nobody pushes you through the last thirty seconds.</p>
+      </div>
+      <div class="gaps">
+        <div class="gap">
+          <div class="n">01</div>
+          <div>
+            <div class="t">YOUTUBE IS PASSIVE</div>
+            <div class="d">Tutorials teach technique. They don't time your rounds, call your combos live, or push you when you're gassed.</div>
+          </div>
         </div>
-    </section>
+        <div class="gap">
+          <div class="n">02</div>
+          <div>
+            <div class="t">APPS ARE BLOATED</div>
+            <div class="d">Fitness apps bury the one thing fighters want — the bag workout — under gamification, subscriptions, and tap-tap UX you can't use mid-round.</div>
+          </div>
+        </div>
+        <div class="gap">
+          <div class="n">03</div>
+          <div>
+            <div class="t">GYMS ARE GATED</div>
+            <div class="d">Private coaching is $80/hr. Group classes aren't bag work. Home training gets you 80% there — if you have structure.</div>
+          </div>
+        </div>
+        <div class="gap">
+          <div class="n">04</div>
+          <div>
+            <div class="t">SWEATY HANDS, TINY SCREENS</div>
+            <div class="d">You can't tap a phone mid-round. Any workout that requires looking at a screen breaks the flow of real bag work.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 04 WHY NOW ═══════════════════ -->
+<section class="slide s04" data-label="Why Now">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>WHY NOW</div><div class="slide-num">04<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="h-eyebrow">WHY NOW</div>
+    <h2>COMBAT FITNESS IS <span class="red">EVERYWHERE.</span><br>THE TOOLS HAVEN'T <span class="red">CAUGHT UP.</span></h2>
+
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="n">+61<span class="unit">%</span></div>
+        <div class="t">BOXING<br>PARTICIPATION</div>
+        <div class="d">Growth in U.S. recreational boxing since 2017. UFC, PFL, and the Paul-era hype funnel has pushed millions of new participants into combat sports.</div>
+        <div class="src">SOURCE · SFIA 2024</div>
+      </div>
+      <div class="why-card">
+        <div class="n">38<span class="unit">M</span></div>
+        <div class="t">AIRPODS<br>OWNERS · US</div>
+        <div class="d">Voice-only UX is no longer a niche — it's the default for anyone working out. Hands-free audio coaching finally has a distribution channel.</div>
+        <div class="src">SOURCE · APPLE FY24</div>
+      </div>
+      <div class="why-card">
+        <div class="n">$220<span class="unit">B</span></div>
+        <div class="t">GLOBAL FITNESS<br>APP MARKET</div>
+        <div class="d">Projected 2026 value. Yoga, running, lifting each have category leaders doing 9-figure ARR. Combat sports does not. The lane is open.</div>
+        <div class="src">SOURCE · STATISTA 2024</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 05 INSIGHT ═══════════════════ -->
+<section class="slide s05" data-label="The Insight">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>THE INSIGHT</div><div class="slide-num">05<span class="sep">/</span>14</div></div>
+
+  <div class="ins-wrap">
+    <div class="ins-txt">
+      <div class="h-eyebrow">THE INSIGHT</div>
+      <h2>THE COACH DOESN'T NEED TO <span class="red">BE IN THE ROOM.</span></h2>
+      <p class="body-lg">The best corner work is <em>audio</em>. A voice calling combos. A voice counting rounds. A voice telling you to keep your hands up. That's what a fighter hears from outside the ropes — and it's exactly what a phone and a pair of earbuds can deliver.</p>
+      <div class="pullquote">STRIP THE SCREEN. KEEP THE COACH.</div>
+    </div>
+    <div class="ins-diag">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+      <div class="core">BAG<br>BUDDY</div>
+      <div class="orbit o1"><span class="icn">●</span>COMBO CALLOUTS</div>
+      <div class="orbit o2"><span class="icn">●</span>ROUND TIMER</div>
+      <div class="orbit o3"><span class="icn">●</span>COACH AUDIO</div>
+      <div class="orbit o4"><span class="icn">●</span>HANDS-FREE</div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 06 PRODUCT ═══════════════════ -->
+<section class="slide s06" data-label="The Product">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>THE PRODUCT</div><div class="slide-num">06<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="prod-wrap">
+      <div>
+        <div class="h-eyebrow">THE PRODUCT · IOS · LIVE</div>
+        <h2 style="font-family: var(--display); font-weight: 700; font-size: 88px; letter-spacing: -2px; line-height: 0.95; text-transform: uppercase; margin-top: 16px;">EVERYTHING YOU NEED.<br><span class="red">NOTHING YOU DON'T.</span></h2>
+      </div>
+
+      <div class="phone-row">
+        <div class="phone-col">
+          <div class="phone"><img src="images/home.png" alt="Home"></div>
+          <div class="phone-label">HOME</div>
+          <div class="phone-sub">Three modes. One tap. Ready to work.</div>
+        </div>
+        <div class="phone-col">
+          <div class="phone"><img src="images/session.png" alt="Session"></div>
+          <div class="phone-label">SESSION</div>
+          <div class="phone-sub">Combos called live. Round clock running. Eyes on the bag.</div>
+        </div>
+        <div class="phone-col">
+          <div class="phone"><img src="images/history.png" alt="History"></div>
+          <div class="phone-label">HISTORY</div>
+          <div class="phone-sub">Streaks. Rounds. Proof of work.</div>
+        </div>
+        <div class="phone-col">
+          <div class="phone"><img src="images/settings.png" alt="Settings"></div>
+          <div class="phone-label">SETTINGS</div>
+          <div class="phone-sub">Round length, rest, voice, tempo. Dial it in.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 07 MODES ═══════════════════ -->
+<section class="slide s07" data-label="The Modes">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>THE MODES</div><div class="slide-num">07<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="h-eyebrow">THREE MODES · ONE WORKOUT ENGINE</div>
+    <h2 style="font-family: var(--display); font-weight: 700; font-size: 88px; letter-spacing: -2px; line-height: 0.95; text-transform: uppercase; margin-top: 16px;">EVERY <span class="red">FIGHTER</span> TRAINS DIFFERENT.<br>THE APP MEETS THEM THERE.</h2>
+
+    <div class="modes-grid">
+      <div class="mode">
+        <div class="code">MODE 01 · BN SERIES</div>
+        <div class="name">STAND<br>AND <span class="red">BANG.</span></div>
+        <div class="tag">Pure offense.</div>
+        <div class="desc">Back-to-back strike combinations. Feet planted, hands heavy. For building power, conditioning, and the confidence to stay in the pocket.</div>
+        <div class="stats">
+          <div><div class="k">COMBOS</div><div class="v">52</div></div>
+          <div><div class="k">AVG LENGTH</div><div class="v">4 STRIKES</div></div>
+        </div>
+      </div>
+      <div class="mode">
+        <div class="code">MODE 02 · BD SERIES</div>
+        <div class="name">STICK<br>AND <span class="red">MOVE.</span></div>
+        <div class="tag">Hit and don't get hit.</div>
+        <div class="desc">Offense chained with defense — slips, rolls, pivots, level changes. Trains the full fight IQ: ring generalship, not just power.</div>
+        <div class="stats">
+          <div><div class="k">COMBOS</div><div class="v">63</div></div>
+          <div><div class="k">DEFENSE MOVES</div><div class="v">8 TYPES</div></div>
+        </div>
+      </div>
+      <div class="mode">
+        <div class="code">MODE 03 · DR SERIES</div>
+        <div class="name">DRILLERS MAKE <span class="red">KILLERS.</span></div>
+        <div class="tag">One combo. Perfect it.</div>
+        <div class="desc">Single-combo repetition. Called over and over until it's in the muscle. The fundamental work pros do every day in camp.</div>
+        <div class="stats">
+          <div><div class="k">COMBOS</div><div class="v">34</div></div>
+          <div><div class="k">REPS/RD</div><div class="v">30+</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 08 MANIFESTO / WHY WE WIN ═══════════════════ -->
+<section class="slide s08" data-label="Why We Win">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>WHY WE WIN</div><div class="slide-num">08<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="man-head">
+      <div>
+        <div class="h-eyebrow">THE MANIFESTO</div>
+        <h2>WE BUILT IT <span class="red">RIGHT.</span><br>NOT LIKE THE OTHERS.</h2>
+      </div>
+      <div class="body-lg" style="max-width: 560px;">Most fitness apps are optimized for retention metrics. Bag Buddy is optimized for your fifth round. That difference shows up in every design decision.</div>
+    </div>
+
+    <div class="beats">
+      <div class="beat">
+        <div>
+          <div class="nope">NO SUBSCRIPTIONS</div>
+          <div class="yep">FREE FOREVER CORE</div>
+        </div>
+        <div class="d">The whole training engine ships free. We build trust with the community first, monetize the power users second.</div>
+      </div>
+      <div class="beat">
+        <div>
+          <div class="nope">NO GAMIFICATION</div>
+          <div class="yep">REAL STREAKS, NO CONFETTI</div>
+        </div>
+        <div class="d">No badges, no XP, no fake levels. Just your rounds and your streak. Fighters don't need fake dopamine — they get the real kind on the bag.</div>
+      </div>
+      <div class="beat">
+        <div>
+          <div class="nope">NO SCREEN TAPPING</div>
+          <div class="yep">HANDS-FREE BY DESIGN</div>
+        </div>
+        <div class="d">Voice-first from minute one. Start the round, put the phone down, work. The only other app doing this well is the bag itself.</div>
+      </div>
+      <div class="beat">
+        <div>
+          <div class="nope">NO FLUFF</div>
+          <div class="yep">BUILT BY A FIGHTER</div>
+        </div>
+        <div class="d">Every combo, every callout cadence, every rest cue is tuned in the gym by someone who actually trains. Credibility compounds in this community.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 09 MARKET ═══════════════════ -->
+<section class="slide s09" data-label="Market">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>MARKET</div><div class="slide-num">09<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="mkt-wrap">
+      <div>
+        <div class="h-eyebrow">MARKET SIZE</div>
+        <h2>A REAL WEDGE<br>IN A <span class="red">BIG</span> ROOM.</h2>
+        <p class="lede body">We don't need to own combat fitness. We need to own <strong style="color: var(--white);">the heavy bag workout</strong> — a specific, under-served ritual with a defensible audience. Bag work is daily for serious trainees. Daily use = the best retention in fitness.</p>
+      </div>
+      <div class="tam-stack">
+        <div class="tam-box tam">
+          <div class="tag">TAM</div>
+          <div class="desc">
+            <div class="k">GLOBAL FITNESS APP MARKET</div>
+            <div class="t">All connected-fitness software, 2026 projection.</div>
+          </div>
+          <div class="num">$220B<span class="unit">2026E</span></div>
+        </div>
+        <div class="tam-box">
+          <div class="tag">SAM</div>
+          <div class="desc">
+            <div class="k">COMBAT-SPORTS CONSUMERS · GLOBAL</div>
+            <div class="t">Recreational boxers, muay thai, MMA hobbyists with a bag at home or at a gym.</div>
+          </div>
+          <div class="num">$1.8B<span class="unit">ANNUAL</span></div>
+        </div>
+        <div class="tam-box">
+          <div class="tag">SOM</div>
+          <div class="desc">
+            <div class="k">ENGLISH-SPEAKING IOS · YEAR 3</div>
+            <div class="t">Addressable via App Store + community marketing with current product scope.</div>
+          </div>
+          <div class="num">$42M<span class="unit">Y3 ARR</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 10 TRACTION ═══════════════════ -->
+<section class="slide s10" data-label="Traction">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>TRACTION</div><div class="slide-num">10<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="trac-top">
+      <div>
+        <div class="h-eyebrow">TRACTION</div>
+        <h2>NOT A DECK-WARE PITCH.<br><span class="red">LIVE PRODUCT.</span> REAL USERS.</h2>
+      </div>
+      <div style="display: flex; justify-content: flex-end; padding-bottom: 8px;">
+        <div class="live-badge"><span class="dot"></span>APP STORE · LIVE SINCE 2024</div>
+      </div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="k">DOWNLOADS · LTD</div>
+        <div class="v red">2,400<span class="unit">+</span></div>
+        <div class="sub">Zero paid acquisition. Word-of-mouth + founder's gym network.</div>
+      </div>
+      <div class="metric">
+        <div class="k">D30 RETENTION</div>
+        <div class="v">38<span class="unit">%</span></div>
+        <div class="sub">~2.7× the fitness-app median. Daily-ritual use case paying off.</div>
+      </div>
+      <div class="metric">
+        <div class="k">AVG SESSIONS / WEEK</div>
+        <div class="v">4.1</div>
+        <div class="sub">Per active user. Matches real training frequency, not typical app engagement.</div>
+      </div>
+      <div class="metric">
+        <div class="k">APP STORE RATING</div>
+        <div class="v red">4.9<span class="unit">/5</span></div>
+        <div class="sub">Early reviewers are specific: "finally a tool built by someone who trains."</div>
+      </div>
+    </div>
+
+    <div class="roadmap">
+      <div class="rm-col"><div class="rm-q">Q4 '24 · SHIPPED</div><div class="rm-t">V1 ON IOS</div><div class="rm-d">3 modes, 149 combos, round timer, history, voice callouts.</div></div>
+      <div class="rm-col now"><div class="rm-q">Q1 '26 · NOW</div><div class="rm-t">APPLE WATCH + HEALTH</div><div class="rm-d">Haptic round cues. Active calorie export. HRV-aware rest.</div></div>
+      <div class="rm-col"><div class="rm-q">Q3 '26</div><div class="rm-t">ANDROID + PRO TIER</div><div class="rm-d">Full platform parity. Coach voice marketplace. Custom combos.</div></div>
+      <div class="rm-col"><div class="rm-q">2027</div><div class="rm-t">GYM B2B</div><div class="rm-d">Licensed class mode for independent boxing gyms. Branded rooms.</div></div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 11 BUSINESS MODEL ═══════════════════ -->
+<section class="slide s11" data-label="Business Model">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>BUSINESS MODEL</div><div class="slide-num">11<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="h-eyebrow">BUSINESS MODEL</div>
+    <h2 style="font-family: var(--display); font-weight: 700; font-size: 76px; letter-spacing: -2px; line-height: 0.92; text-transform: uppercase; margin-top: 12px;">FREE CORE. <span class="red">PAID LANE</span> FOR SERIOUS TRAINEES.</h2>
+
+    <div class="biz-grid">
+      <div class="tier">
+        <div class="type">TIER 01 · CURRENT</div>
+        <div class="price"><span class="n">$0</span><span class="u">FOREVER</span></div>
+        <div class="name">BAG BUDDY</div>
+        <div class="tag">Everything a fighter needs to train today. No asterisks.</div>
+        <div class="list">
+          <div class="item"><span class="check">●</span><span>All 149 combos, all 3 modes</span></div>
+          <div class="item"><span class="check">●</span><span>Round timer · history · streaks</span></div>
+          <div class="item"><span class="check">●</span><span>1 coach voice · 3 combo tempos</span></div>
+          <div class="item"><span class="check">●</span><span>Apple Health integration</span></div>
+        </div>
+        <div class="econ">
+          <div><div class="k">FUNCTION</div><div class="v">ACQUISITION</div></div>
+          <div><div class="k">COST TO SERVE</div><div class="v">~$0.08 / MAU</div></div>
+        </div>
+      </div>
+
+      <div class="tier pro">
+        <div class="type">TIER 02 · Q3 2026</div>
+        <div class="price"><span class="n">$8</span><span class="u">/ MO</span></div>
+        <div class="name">BAG BUDDY <span class="red">PRO</span></div>
+        <div class="tag">For fighters actually in camp. Built on top of the free engine.</div>
+        <div class="list">
+          <div class="item"><span class="check">●</span><span>Custom combo builder · unlimited</span></div>
+          <div class="item"><span class="check">●</span><span>Coach voice marketplace (licensed pros)</span></div>
+          <div class="item"><span class="check">●</span><span>Structured 6-week fight camps</span></div>
+          <div class="item"><span class="check">●</span><span>Advanced analytics · round-by-round heat map</span></div>
+          <div class="item"><span class="check">●</span><span>Apple Watch · haptic coaching</span></div>
+        </div>
+        <div class="econ">
+          <div><div class="k">TARGET CONVERSION</div><div class="v">7–12%</div></div>
+          <div><div class="k">ARPU (PRO)</div><div class="v">$72 / YR</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 12 COMPETITIVE ═══════════════════ -->
+<section class="slide s12" data-label="Competitive">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>COMPETITIVE</div><div class="slide-num">12<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="h-eyebrow">COMPETITIVE LANDSCAPE</div>
+    <h2>THE LANE IS <span class="red">EMPTY.</span></h2>
+
+    <div class="comp-wrap">
+      <div class="axis-plot">
+        <div class="axis ax-h"></div>
+        <div class="axis ax-v"></div>
+        <div class="al-top">HANDS-FREE · VOICE-FIRST</div>
+        <div class="al-bot">SCREEN-BOUND · TAP HEAVY</div>
+        <div class="al-l">FIGHT-SPECIFIC</div>
+        <div class="al-r">GENERAL FITNESS</div>
+
+        <div class="dot us" style="left: 28%; top: 22%;">BAG BUDDY</div>
+        <div class="dot" style="left: 75%; top: 32%;">PELOTON</div>
+        <div class="dot" style="left: 68%; top: 48%;">FIIT</div>
+        <div class="dot" style="left: 78%; top: 68%;">APPLE FITNESS+</div>
+        <div class="dot" style="left: 38%; top: 78%;">FIGHT CAMP</div>
+        <div class="dot" style="left: 18%; top: 72%;">YOUTUBE COACHES</div>
+        <div class="dot" style="left: 44%; top: 62%;">SHADOW BOXING APPS</div>
+      </div>
+
+      <div class="comp-sum">
+        <div class="sum-card">
+          <div class="k">CONNECTED HARDWARE</div>
+          <div class="v">FIGHT CAMP · $1,350 BAG + SUB</div>
+        </div>
+        <div class="sum-card">
+          <div class="k">GENERAL FITNESS</div>
+          <div class="v">PELOTON, FIIT — TAP-HEAVY, NOT BUILT FOR BAG</div>
+        </div>
+        <div class="sum-card us">
+          <div class="k">BAG BUDDY</div>
+          <div class="v">FREE · HANDS-FREE · FIGHT-SPECIFIC · NO HARDWARE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 13 TEAM ═══════════════════ -->
+<section class="slide s13" data-label="Team">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>TEAM</div><div class="slide-num">13<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="team-grid">
+      <div class="founder-card">
+        <div class="founder-pic">
+          <div class="avatar">RT</div>
+        </div>
+        <div class="founder-body">
+          <div class="name">RAFE TANGORRA</div>
+          <div class="role">FOUNDER · BUILDER · FIGHTER</div>
+          <p class="bio">Rafe is a software engineer and amateur boxer. He built Bag Buddy because the app he wanted didn't exist — and because he was tired of yelling his own combos into an empty garage gym.</p>
+          <div class="cred">
+            <div class="cred-row"><span class="b">●</span><span>12+ YRS SHIPPING CONSUMER IOS · SWIFT · AUDIO TOOLS</span></div>
+            <div class="cred-row"><span class="b">●</span><span>5+ YRS ACTIVE HEAVY-BAG + RING TRAINING</span></div>
+            <div class="cred-row"><span class="b">●</span><span>V1 DESIGNED, BUILT, SHIPPED SOLO · IN-MARKET SINCE 2024</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-prose">
+        <div class="h-eyebrow">TEAM</div>
+        <h2>FOUNDER-COACH.<br><span class="red">FOUNDER-BUILDER.</span></h2>
+        <p class="lede body">Bag Buddy has one of the rarest combinations in consumer fitness: a founder with deep technical chops <em>and</em> real, credible time under the hood in the sport. Every combo in the app was tested on a live heavy bag. Every copy line was written by someone who's been hit.</p>
+
+        <h3>WHY SOLO FOUNDER WORKS · FOR NOW</h3>
+        <p class="why">V1 is shipped and performing. Raising this round to hire a Senior iOS engineer (Watch + backend), a community-led growth lead (gyms, creators), and reserve for one part-time studio sound designer for the coach-voice marketplace.</p>
+
+        <div class="pull">THE PRODUCT IS CREDIBLE BECAUSE THE PERSON BUILDING IT IS.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+<!-- ═══════════════════ 14 THE ASK ═══════════════════ -->
+<section class="slide s14" data-label="The Ask">
+  <div class="frame-top"><div class="brand"><span class="red-dot"></span>THE ASK</div><div class="slide-num">14<span class="sep">/</span>14</div></div>
+
+  <div class="content">
+    <div class="ask-wrap">
+      <div>
+        <div class="h-eyebrow">THE ASK</div>
+        <h2>READY<br>TO <span class="red">WORK?</span></h2>
+        <p class="ask-sub">We've built the product, shipped it, and earned the first 2,400 fighters without spending a dollar. This raise takes Bag Buddy from credible indie app to category-defining brand in combat fitness.</p>
+
+        <div class="vision">
+          <div class="label">THE VISION · 3 YEARS OUT</div>
+          <div class="line">BAG BUDDY IS TO BOXING WHAT STRAVA IS TO RUNNING.</div>
+        </div>
+
+        <div class="contact">
+          <div><div class="c-k">FOUNDER</div><div class="c-v">Rafe Tangorra</div></div>
+          <div><div class="c-k">EMAIL</div><div class="c-v">rafe@bagbuddy.app</div></div>
+          <div><div class="c-k">APP STORE</div><div class="c-v">The Bag Buddy · iOS</div></div>
+        </div>
+      </div>
+
+      <div class="ask-panel">
+        <div class="raise-k">RAISING</div>
+        <div class="raise-v">$750K<span class="u">SAFE</span></div>
+        <div class="rn">Post-money cap · $6M · 18-month runway</div>
+
+        <div class="alloc">
+          <div class="row">
+            <div class="p">45%</div>
+            <div class="l">ENGINEERING<div class="d">Sr. iOS + Watch, backend for Pro tier + combo marketplace.</div></div>
+            <div class="r">$340K</div>
+          </div>
+          <div class="row">
+            <div class="p">30%</div>
+            <div class="l">COMMUNITY + GROWTH<div class="d">Gym partnerships, creator seeding, owned social (already running).</div></div>
+            <div class="r">$225K</div>
+          </div>
+          <div class="row">
+            <div class="p">15%</div>
+            <div class="l">COACH VOICE STUDIO<div class="d">Licensed pro fighters recording combos + camp programs.</div></div>
+            <div class="r">$115K</div>
+          </div>
+          <div class="row">
+            <div class="p">10%</div>
+            <div class="l">OPS + RESERVE<div class="d">Legal, cloud, App Store, contingency.</div></div>
+            <div class="r">$70K</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame-bot"><div class="confidential">CONFIDENTIAL</div><div class="slide-num">BAG BUDDY · 2026</div></div>
+</section>
+
+</deck-stage>
+
+<script src="deck-stage.js"></script>
 </body>
 </html>
